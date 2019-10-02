@@ -18,36 +18,36 @@ import java.util.List;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("customer")
 public class CustomerController {
     @Resource
     private CustomerService customerService;
 
-    @PostMapping("/add")
+    @PostMapping("add")
     public Result add(Customer customer) {
         customerService.save(customer);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/delete")
+    @PostMapping("delete")
     public Result delete(@RequestParam Integer id) {
         customerService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/update")
+    @PostMapping("update")
     public Result update(Customer customer) {
         customerService.update(customer);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @PostMapping("detail")
     public Result detail(@RequestParam Integer id) {
         Customer customer = customerService.findById(id);
         return ResultGenerator.genSuccessResult(customer);
     }
 
-    @PostMapping("/list")
+    @PostMapping("list")
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<Customer> list = customerService.findAll();

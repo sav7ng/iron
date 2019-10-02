@@ -22,12 +22,12 @@ import java.util.List;
 * Created by CodeGenerator on 2019/08/17.
 */
 @RestController
-@RequestMapping("/sys/user")
+@RequestMapping("sys/user")
 public class RigisterController {
     @Resource
     private SysUserService sysUserService;
 
-    @PostMapping("/add")
+    @PostMapping("add")
     public Result add(SysUser sysUser) {
 
         if (sysUser != null){
@@ -48,25 +48,25 @@ public class RigisterController {
 
     }
 
-    @PostMapping("/delete")
+    @PostMapping("delete")
     public Result delete(@RequestParam Integer id) {
         sysUserService.deleteById(id);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/update")
+    @PostMapping("update")
     public Result update(SysUser sysUser) {
         sysUserService.update(sysUser);
         return ResultGenerator.genSuccessResult();
     }
 
-    @PostMapping("/detail")
+    @PostMapping("detail")
     public Result detail(@RequestParam Integer id) {
         SysUser sysUser = sysUserService.findById(id);
         return ResultGenerator.genSuccessResult(sysUser);
     }
 
-    @PostMapping("/list")
+    @PostMapping("list")
     public Result list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
         List<SysUser> list = sysUserService.findAll();
