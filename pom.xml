@@ -174,11 +174,11 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!--hutool-->
+        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>4.6.2</version>
+            <version>5.0.5</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
