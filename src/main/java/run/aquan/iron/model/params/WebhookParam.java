@@ -1,7 +1,7 @@
 package run.aquan.iron.model.params;
 
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Class WebhookParam
@@ -11,7 +11,7 @@ import lombok.Data;
  * @Version 1.0
  **/
 @Data
-@Builder
+@NoArgsConstructor
 public class WebhookParam {
 
     private String id;
@@ -28,4 +28,19 @@ public class WebhookParam {
     private String paid_at;
     private String x_signature;
 
+    @Override
+    public String toString() {
+        return  "amount" + amount + "|" +
+                "collection_id" + collection_id + "|" +
+                "due_at" + due_at + "|" +
+                "email" + email + "|" +
+                "id" + id + "|" +
+                "mobile" + mobile + "|" +
+                "name" + name + "|" +
+                "paid_amount" + paid_amount + "|" +
+                "paid_at" + paid_at + "|" +
+                "paid" + paid + "|" +
+                "state" + state + "|" +
+                "url" + url;
+    }
 }
