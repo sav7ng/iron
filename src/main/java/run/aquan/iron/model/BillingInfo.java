@@ -1,5 +1,6 @@
 package run.aquan.iron.model;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,6 +11,7 @@ import lombok.Data;
  * @Version 1.0
  **/
 @Data
+@Builder
 public class BillingInfo {
 
     private String billingAddress;

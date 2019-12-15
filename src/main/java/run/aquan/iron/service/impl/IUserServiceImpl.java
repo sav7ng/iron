@@ -3,6 +3,7 @@ package run.aquan.iron.service.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import run.aquan.iron.model.IUser;
+import run.aquan.iron.model.User;
 import run.aquan.iron.service.IUserService;
 
 /**
@@ -21,11 +22,8 @@ public class IUserServiceImpl implements IUserService {
     }
 
     @Override
-    public IUser getUserByLoginName(String loginName) {
-        IUser user = new IUser();
-        user.setId("2019");
-        user.setName("joe");
-        user.setAge(18);
+    public IUser getUserByLoginName(String loginName){
+        IUser user = IUser.builder().id("2019").name("Aquan").age(18).build();
         return user;
     }
 }

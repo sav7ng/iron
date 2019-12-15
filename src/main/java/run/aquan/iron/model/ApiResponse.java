@@ -1,6 +1,8 @@
 package run.aquan.iron.model;
 
-import run.aquan.iron.enums.ApiResponseEnum;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Class ApiResponse
@@ -9,7 +11,8 @@ import run.aquan.iron.enums.ApiResponseEnum;
  * @Date 2019.8.13 0:40
  * @Version 1.0
  **/
-
+@Data
+@NoArgsConstructor
 public class ApiResponse {
     private int errCode = 0;
 
@@ -17,50 +20,8 @@ public class ApiResponse {
 
     private Object data;
 
-    public ApiResponse(){
-
-    }
-
-
     public ApiResponse(Object data) {
         this.data = data;
     }
 
-    public ApiResponse(ApiResponseEnum apiResponseEnum){
-        this.errCode = apiResponseEnum.getErrCode();
-        this.errMsg = apiResponseEnum.getErrMsg();
-    }
-
-    public int getErrCode() {
-        return errCode;
-    }
-
-    public void setErrCode(int errCode) {
-        this.errCode = errCode;
-    }
-
-    public String getErrMsg() {
-        return errMsg;
-    }
-
-    public void setErrMsg(String errMsg) {
-        this.errMsg = errMsg;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(Object data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "ApiResponse{" +
-                "errCode=" + errCode +
-                ", errMsg='" + errMsg + '\'' +
-                ", data=" + data +
-                '}';
-    }
 }
