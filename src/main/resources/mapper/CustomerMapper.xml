@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="run.aquan.iron.dao.CustomerMapper">
-  <resultMap id="BaseResultMap" type="run.aquan.iron.model.Customer">
+  <resultMap id="BaseResultMap" type="run.aquan.iron.system.model.Customer">
     <!--
       WARNING - @mbg.generated
     -->

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="run.aquan.iron.dao.TreeMapper">
+<mapper namespace="run.aquan.iron.system.dao.TreeMapper">
 <!--    &lt;!&ndash; start 关联查询&ndash;&gt;-->
 <!--    &lt;!&ndash; 得到属于Invoice的数据&ndash;&gt;-->
 <!--    <select id="getInvoiceById" resultMap="rmInvoice">-->
@@ -30,7 +30,7 @@
        select * from invoice  where invoice_id=#{id}
     </select>
 
-    <select id="getBillingInfoById" parameterType="int" resultType="run.aquan.iron.model.BillingInfo" >
+    <select id="getBillingInfoById" parameterType="int" resultType="run.aquan.iron.system.model.BillingInfo" >
        select
             billing_address,
             billing_city,
@@ -40,13 +40,13 @@
         from invoice where invoice_id=#{id}
     </select>
 
-    <select id="getCustomerById" resultType="run.aquan.iron.model.Customer" parameterType="int">
+    <select id="getCustomerById" resultType="run.aquan.iron.system.model.Customer" parameterType="int">
         select c.*,i.* from customer c left  join invoice i on c.customer_id=i.customer_id where i.invoice_id=#{id}
     </select>
 
-    <resultMap id="rmInvoice" autoMapping="true" type="run.aquan.iron.model.Invoice">
+    <resultMap id="rmInvoice" autoMapping="true" type="run.aquan.iron.system.model.Invoice">
         <association property="billingInfo" autoMapping="true"  column="invoice_id" select="getBillingInfoById"></association>
-        <collection property="customer" ofType="run.aquan.iron.model.Customer" column="invoice_id" select="getCustomerById"></collection>
+        <collection property="customer" ofType="run.aquan.iron.system.model.Customer" column="invoice_id" select="getCustomerById"></collection>
     </resultMap>
     <!--end 嵌套查询-->
 </mapper>
