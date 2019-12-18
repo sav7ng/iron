@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@MapperScan("com.baomidou.mybatisplus.samples.quickstart.mapper")
+@MapperScan("run.aquan.iron.system.dao")
 @EnableScheduling
 @EnableSwagger2
 public class IronApplication {

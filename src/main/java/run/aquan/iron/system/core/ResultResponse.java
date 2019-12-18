@@ -1,13 +1,13 @@
 package run.aquan.iron.system.core;
 
 /**
- * @Class ResultGenerator
+ * @Class ResultResponse
  * @Description 响应结果生成工具
  * @Author Aquan
  * @Date 2019/8/16 15:01
  * @Version 1.0
  **/
-public class ResultGenerator {
+public class ResultResponse {
     private static final String DEFAULT_SUCCESS_MESSAGE = "SUCCESS";
 
     public static Result genSuccessResult() {
