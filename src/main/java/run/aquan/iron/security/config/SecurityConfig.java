@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import run.aquan.iron.security.constants.SecurityConstants;
 import run.aquan.iron.security.exception.JWTAccessDeniedHandler;
 import run.aquan.iron.security.exception.JWTAuthenticationEntryPoint;
 import run.aquan.iron.security.filter.JWTAuthenticationFilter;
@@ -56,7 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 禁用 CSRF
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST, SecurityConstants.AUTH_LOGIN_URL).permitAll()
+                .antMatchers(HttpMethod.POST, "/api/user/registerUser").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/user/getBy").permitAll()
                 // 指定路径下的资源需要验证了的用户才能访问
                 .antMatchers("/api/**").authenticated()

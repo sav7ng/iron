@@ -1,19 +1,18 @@
-package run.aquan.iron.security.entity;
+package run.aquan.iron.system.model.params;
 
 import lombok.Data;
 
 /**
- * @Class LoginUser
+ * @Class RegisterUserParam
  * @Description TODO
  * @Author Aquan
- * @Date 2019/12/19 16:38
+ * @Date 2019.12.20 0:43
  * @Version 1.0
  **/
 @Data
-public class LoginUser {
+public class RegisterUserParam {
 
     private String userName;
     private String password;
-    private Boolean rememberMe;
 
 }

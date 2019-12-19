@@ -1,12 +1,10 @@
 package run.aquan.iron.system.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.model.User;
+import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
 
 import javax.annotation.Resource;
@@ -21,6 +19,12 @@ public class UserController {
 
     @Resource
     private UserService userService;
+
+    @PostMapping("registerUser")
+    public Result registerUser(@RequestBody RegisterUserParam registerUserParam) {
+        userService.saveUser(registerUserParam);
+        return ResultResponse.genSuccessResult("注册成功");
+    }
 
     @GetMapping("getBy")
     public Result getBy(@RequestParam(value = "id")Integer id) {
