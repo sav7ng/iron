@@ -12,4 +12,22 @@
     <result column="sex" jdbcType="INTEGER" property="sex" />
     <result column="register_date" jdbcType="TIMESTAMP" property="registerDate" />
   </resultMap>
+
+  <select id="findUserByUserName" resultType="run.aquan.iron.system.model.User">
+    SELECT
+	u.id,
+	u.username,
+	u.`password`,
+	u.nick_name,
+	u.sex,
+	u.register_date
+    FROM
+        `user` u
+    WHERE 1=1
+    <if test="userName != null and userName != ''">
+      and u.username = #{userName}
+    </if>
+  </select>
+
+
 </mapper>

@@ -16,7 +16,7 @@ import java.util.Optional;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/api/user")
 public class UserController {
 
     @Resource

@@ -1,25 +1,31 @@
 package run.aquan.iron.system.service.impl;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import run.aquan.iron.system.dao.UserMapper;
+import run.aquan.iron.system.exception.UserNameAlreadyExistException;
 import run.aquan.iron.system.model.User;
 import run.aquan.iron.system.service.UserService;
 
 import javax.annotation.Resource;
 import javax.validation.constraints.NotBlank;
+import java.util.Map;
 import java.util.Optional;
 
-
-/**
- * Created by CodeGenerator on 2019/08/10.
- */
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
     @Resource
     private UserMapper userMapper;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     @Override
     public Optional<User> getOptional(Integer id) {
@@ -30,6 +36,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getById(@NotBlank Integer id) {
         return userMapper.selectById(id);
+    }
+
+    @Override
+    public User findUserByUserName(String userName) {
+        User user = userMapper.findUserByUserName(userName).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + userName));
+        return user;
+    }
+
+    @Override
+    public void saveUser(Map<String, String> registerUser) {
+        Optional<User> optionalUser = userMapper.findUserByUserName(registerUser.get("username"));
+        if (optionalUser.isPresent()) {
+            throw new UserNameAlreadyExistException("User name already exist!Please choose another user name.");
+        }
+        User user = User.builder()
+                .username(registerUser.get("username"))
+                .password(bCryptPasswordEncoder.encode(registerUser.get("password")))
+                .roles("DEV,PM")
+                .build();
+        userMapper.insert(user);
     }
 
 

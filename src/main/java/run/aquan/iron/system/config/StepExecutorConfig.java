@@ -1,5 +1,6 @@
 package run.aquan.iron.system.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Component;
  * @Date 2019/8/16 14:52
  * @Version 1.0
  **/
+@Slf4j
 @Component
 public class StepExecutorConfig  implements ApplicationRunner {
-    private static final Logger LOG = LoggerFactory.getLogger(StepExecutorConfig.class);
 
     @Value("${spring.web.loginurl}")
     private String loginUrl;
@@ -38,11 +39,11 @@ public class StepExecutorConfig  implements ApplicationRunner {
     private Boolean exitisVersion() {
         String osName = System.getProperties().getProperty("os.name");
         if(osName.equals("Linux")) {
-            LOG.info("running in Linux");
+            log.info("running in Linux");
             return true;
         }
         else{
-            LOG.info("don't running in Linux");
+            log.info("don't running in Linux");
             return false;
         }
     }
@@ -50,14 +51,13 @@ public class StepExecutorConfig  implements ApplicationRunner {
     private void application() {
         if (isOpen){
             String cmd = googleExcutePath +" "+ loginUrl;
-            LOG.info("Swagger地址：" + cmd);
+            log.info("Swagger地址：" + cmd);
             Runtime run = Runtime.getRuntime();
             try{
                 run.exec(cmd);
-                LOG.info("启动浏览器打开项目成功");
+                log.info("启动浏览器打开项目成功");
             }catch (Exception e){
-                e.printStackTrace();
-                LOG.error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
