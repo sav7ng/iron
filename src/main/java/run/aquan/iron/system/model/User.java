@@ -31,6 +31,12 @@ public class User {
     private Date registerDate;
 
     public List<SimpleGrantedAuthority> getRoles() {
+        /**
+         * TODO: 只取索引第 1 到第 2 位的：
+         *  int[] a = {1, 2, 3, 4};
+         *  Arrays.stream(a, 1, 3).forEach(System.out :: println);
+         *  打印 2 ，3
+         **/
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         Arrays.stream(roles.split(",")).forEach(role ->
                 authorities.add(new SimpleGrantedAuthority("ROLE_" + role)));
