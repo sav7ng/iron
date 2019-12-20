@@ -19,8 +19,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import run.aquan.iron.system.core.Result;
-import run.aquan.iron.system.core.ResultCode;
-import run.aquan.iron.system.core.ServiceException;
+import run.aquan.iron.system.enums.ResultCode;
+import run.aquan.iron.system.exception.ServiceException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -34,7 +34,7 @@ import java.util.List;
 
 /**
  * @Class WebMvcConfigurer
- * @Description Spring MVC 配置
+ * @Description TODO Spring MVC 配置
  * @Author Aquan
  * @Date 2019/8/16 14:53
  * @Version 1.0

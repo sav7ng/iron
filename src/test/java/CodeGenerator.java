@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static run.aquan.iron.system.core.ProjectConstant.*;
+import static run.aquan.iron.system.constants.ProjectConstant.*;
 
 /**
  * @Class CodeGenerator

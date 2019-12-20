@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.util.StringUtils;
-import run.aquan.iron.security.constants.SecurityConstants;
+import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.utils.JwtTokenUtils;
 
 import javax.servlet.FilterChain;
@@ -39,9 +39,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String authorization = request.getHeader(SecurityConstants.TOKEN_HEADER);
+        String authorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
         // 如果请求头中没有token信息则直接放行了
-        if (authorization == null || !authorization.startsWith(SecurityConstants.TOKEN_PREFIX)) {
+        if (authorization == null || !authorization.startsWith(SecurityConstant.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
@@ -54,7 +54,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
      * 获取用户认证信息 Authentication
      */
     private UsernamePasswordAuthenticationToken getAuthentication(String authorization) {
-        String token = authorization.replace(SecurityConstants.TOKEN_PREFIX, "");
+        String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         try {
             String username = JwtTokenUtils.getUsernameByToken(token);
             logger.info("checking username:" + username);

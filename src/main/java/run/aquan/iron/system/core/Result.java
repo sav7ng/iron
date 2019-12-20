@@ -1,10 +1,11 @@
 package run.aquan.iron.system.core;
 
 import com.alibaba.fastjson.JSON;
+import run.aquan.iron.system.enums.ResultCode;
 
 /**
  * @Class Result
- * @Description 统一API响应结果封装
+ * @Description TODO 统一API响应结果封装
  * @Author Aquan
  * @Date 2019/8/16 14:54
  * @Version 1.0

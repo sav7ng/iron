@@ -9,7 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import run.aquan.iron.security.constants.SecurityConstants;
+import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.entity.LoginUser;
 import run.aquan.iron.security.utils.JwtTokenUtils;
@@ -38,7 +38,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         // 设置URL，以确定是否需要身份验证
-        super.setFilterProcessesUrl(SecurityConstants.AUTH_LOGIN_URL);
+        super.setFilterProcessesUrl(SecurityConstant.AUTH_LOGIN_URL);
     }
 
     @Override
@@ -79,7 +79,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 创建 Token
         String token = JwtTokenUtils.createToken(jwtUser.getUsername(), roles, rememberMe.get());
         // Http Response Header 中返回 Token
-        response.setHeader(SecurityConstants.TOKEN_HEADER, token);
+        response.setHeader(SecurityConstant.TOKEN_HEADER, token);
     }
 
     @Override

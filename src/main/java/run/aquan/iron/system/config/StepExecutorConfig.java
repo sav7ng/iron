@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * @Class StepExecutorConfig
- * @Description 项目启动时自动打开http://localhost:9036/swagger-ui.html
+ * @Description TODO 项目启动时自动打开swagger-ui.html
  * @Author Aquan
  * @Date 2019/8/16 14:52
  * @Version 1.0

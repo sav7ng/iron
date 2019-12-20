@@ -1,8 +1,8 @@
-package run.aquan.iron.system.core;
+package run.aquan.iron.system.constants;
 
 /**
  * @Class ProjectConstant
- * @Description 项目常量
+ * @Description TODO 项目常量
  * @Author Aquan
  * @Date 2019/8/16 14:51
  * @Version 1.0

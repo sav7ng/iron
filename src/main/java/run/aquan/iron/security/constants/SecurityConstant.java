@@ -1,13 +1,13 @@
 package run.aquan.iron.security.constants;
 
 /**
- * @Class SecurityConstants
+ * @Class SecurityConstant
  * @Description TODO Seruity常量
  * @Author Aquan
  * @Date 2019/12/19 16:31
  * @Version 1.0
  **/
-public class SecurityConstants {
+public class SecurityConstant {
 
     /**
      * 登录的地址
@@ -38,6 +38,6 @@ public class SecurityConstants {
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";
 
-    private SecurityConstants() {
+    private SecurityConstant() {
     }
 }
