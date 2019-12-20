@@ -53,7 +53,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             // 这部分和attemptAuthentication方法中的源码是一样的，
             // 只不过由于这个方法源码的是把用户名和密码这些参数的名字是死的，所以我们重写了一下
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
-                    loginUser.getUserName(), loginUser.getPassword());
+                    loginUser.getUsername(), loginUser.getPassword());
             return authenticationManager.authenticate(authRequest);
         } catch (IOException e) {
             // e.printStackTrace();

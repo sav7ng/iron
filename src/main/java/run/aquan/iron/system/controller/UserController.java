@@ -1,14 +1,14 @@
 package run.aquan.iron.system.controller;
 
+import io.swagger.annotations.ApiOperation;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
-import run.aquan.iron.system.model.User;
+import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
-
-import javax.annotation.Resource;
-import java.util.Optional;
 
 /**
 * Created by CodeGenerator on 2019/08/10.
@@ -17,19 +17,27 @@ import java.util.Optional;
 @RequestMapping("/api/user")
 public class UserController {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("registerUser")
-    public Result registerUser(@RequestBody RegisterUserParam registerUserParam) {
+    private final CurrentUser currentUser;
+
+    public UserController(UserService userService, CurrentUser currentUser) {
+        this.userService = userService;
+        this.currentUser = currentUser;
+    }
+
+    @PostMapping("register")
+    @ApiOperation("Register User")
+    public Result register(@RequestBody RegisterUserParam registerUserParam) {
         userService.saveUser(registerUserParam);
         return ResultResponse.genSuccessResult("注册成功");
     }
 
-    @GetMapping("getBy")
-    public Result getBy(@RequestParam(value = "id")Integer id) {
-        Optional<User> optional = userService.getOptional(id);
-        return ResultResponse.genSuccessResult(optional);
+    @GetMapping("pageBy")
+    public Result pageBy(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
+                         @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+        Page<User> users = userService.pageBy(pageNum, pageSize);
+        return ResultResponse.genSuccessResult(users);
     }
 
     @GetMapping("getById")

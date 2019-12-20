@@ -5,10 +5,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.system.model.User;
+import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.service.UserService;
-
-import java.util.Optional;
 
 /**
  * @Class UserDetailsServiceImpl

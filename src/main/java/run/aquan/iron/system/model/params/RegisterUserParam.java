@@ -12,7 +12,7 @@ import lombok.Data;
 @Data
 public class RegisterUserParam {
 
-    private String userName;
+    private String username;
     private String password;
 
 }

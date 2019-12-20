@@ -2,7 +2,7 @@ package run.aquan.iron.security.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import run.aquan.iron.system.model.User;
+import run.aquan.iron.system.model.entity.User;
 
 import java.util.Collection;
 
