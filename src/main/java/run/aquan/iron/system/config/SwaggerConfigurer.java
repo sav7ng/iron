@@ -51,10 +51,10 @@ public class SwaggerConfigurer {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("Meow_Admin_API")
-                .description("爱敲代码的猫API")
-                .termsOfServiceUrl("localhost:8080/meow")
-                .contact(new Contact("Aquan","localhost:8080/meow/swagger-ui.html","853029827@qq.com"))
+                .title("IRON_API")
+                .description("爱敲代码的猫")
+                .termsOfServiceUrl("https://aquan.run")
+                .contact(new Contact("Aquan","https://aquan.run","853029827@qq.com"))
                 .version("0.1")
                 .build();
     }

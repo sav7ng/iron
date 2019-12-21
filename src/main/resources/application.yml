@@ -2,7 +2,7 @@
 server:
   port: 9777
   servlet:
-    context-path: /meow
+    context-path: /iron
 spring:
   profiles:
    active: dev
