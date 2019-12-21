@@ -1,6 +1,7 @@
 package run.aquan.iron.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,9 +29,8 @@ import java.util.stream.Collectors;
  * @Date 2019/12/19 16:32
  * @Version 1.0
  **/
+@Slf4j
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
-    private static final Logger logger = LoggerFactory.getLogger(JWTAuthenticationFilter.class);
 
     private ThreadLocal<Boolean> rememberMe = new ThreadLocal<>();
     private AuthenticationManager authenticationManager;
@@ -57,7 +57,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
             return authenticationManager.authenticate(authRequest);
         } catch (IOException e) {
             // e.printStackTrace();
-            logger.error(e.getMessage());
+            log.error(e.getMessage());
             return null;
         }
     }
