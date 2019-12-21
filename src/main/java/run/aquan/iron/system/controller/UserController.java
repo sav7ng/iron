@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.system.core.Result;
@@ -41,8 +42,12 @@ public class UserController {
 
     @PostMapping("register")
     @ApiOperation("Register User")
-    public Result register(@RequestBody @Valid RegisterUserParam registerUserParam) {
-        return userService.saveUser(registerUserParam);
+    public Result register(@RequestBody @Valid RegisterUserParam registerUserParam, BindingResult result) {
+        if (result.hasErrors()) {
+            return ResultResponse.genFailResult(result.getFieldError().getDefaultMessage());
+        } else {
+            return userService.saveUser(registerUserParam);
+        }
     }
 
     @GetMapping
