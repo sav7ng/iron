@@ -22,7 +22,7 @@ import org.springframework.core.annotation.Order;
 @PropertySource(value = {"classpath:application.yml"})
 public class StartedListener implements ApplicationListener<ApplicationStartedEvent> {
 
-    @Value("${baseUrl}")
+    @Value("${iron.baseUrl}")
     private String baseUrl;
 
     @Override

@@ -5,7 +5,7 @@ import run.aquan.iron.system.model.ApiResponse;
 
 /**
  * @Class ApiResponseUtil
- * @Description TODO
+ * @Description TODO 响应工具类
  * @Author Aquan
  * @Date 2019/8/16 15:24
  * @Version 1.0

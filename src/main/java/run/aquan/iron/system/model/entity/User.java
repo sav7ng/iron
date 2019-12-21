@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import run.aquan.iron.system.enums.Datalevel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -47,12 +48,12 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createTime;
 
-    @Column(name = "updata_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
+    @Column(name = "update_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
     @Temporal(TemporalType.TIMESTAMP)
-    private Date updataTime;
+    private Date updateTime;
 
     @Column(name = "datalevel", columnDefinition = "tinyint(1) default 1 comment '数据级别 0:已删除 1:未删除'")
-    private Integer datalevel;
+    private Datalevel datalevel;
 
     public List<SimpleGrantedAuthority> getRoles() {
         /**

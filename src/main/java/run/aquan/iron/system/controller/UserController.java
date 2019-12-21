@@ -2,13 +2,21 @@ package run.aquan.iron.system.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
+
+import javax.validation.Valid;
+
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 /**
 * Created by CodeGenerator on 2019/08/10.
@@ -26,22 +34,27 @@ public class UserController {
         this.currentUser = currentUser;
     }
 
+    @PostMapping("login")
+    public Result login(@RequestBody @Valid LoginParam loginParam) {
+        return userService.login(loginParam);
+    }
+
     @PostMapping("register")
     @ApiOperation("Register User")
-    public Result register(@RequestBody RegisterUserParam registerUserParam) {
-        userService.saveUser(registerUserParam);
-        return ResultResponse.genSuccessResult("注册成功");
+    public Result register(@RequestBody @Valid RegisterUserParam registerUserParam) {
+        return userService.saveUser(registerUserParam);
     }
 
     @GetMapping("pageBy")
-    public Result pageBy(@RequestParam(value = "pageNum", defaultValue = "0") Integer pageNum,
-                         @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
-        Page<User> users = userService.pageBy(pageNum, pageSize);
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public Result pageBy(@PageableDefault(sort = "updateTime", direction = DESC) Pageable pageable) {
+        Page<User> users = userService.pageBy(pageable);
         return ResultResponse.genSuccessResult(users);
     }
 
     @GetMapping("getById")
-    public Result getById(@RequestParam(value = "id")Integer id) {
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public Result getById(@RequestParam(value = "id") Integer id) {
         User user = userService.getById(id);
         return ResultResponse.genSuccessResult(user);
     }
