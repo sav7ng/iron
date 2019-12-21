@@ -45,6 +45,14 @@ public class UserController {
         return userService.saveUser(registerUserParam);
     }
 
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public Result getByToken() {
+        String result = "当前访问该接口的用户为：" + currentUser.getCurrentUser().toString();
+        return ResultResponse.genSuccessResult(result);
+    }
+
+
     @GetMapping("pageBy")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public Result pageBy(@PageableDefault(sort = "updateTime", direction = DESC) Pageable pageable) {
