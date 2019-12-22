@@ -21,6 +21,7 @@ public class JwtUser implements UserDetails {
     private Collection<? extends GrantedAuthority> authorities;
 
     public JwtUser() {
+
     }
 
     /**

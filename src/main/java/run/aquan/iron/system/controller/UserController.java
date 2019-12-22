@@ -36,18 +36,18 @@ public class UserController {
     }
 
     @PostMapping("login")
-    public Result login(@RequestBody @Valid LoginParam loginParam) {
+    public Result login(@Valid @RequestBody LoginParam loginParam) {
         return userService.login(loginParam);
     }
 
     @PostMapping("register")
     @ApiOperation("Register User")
-    public Result register(@RequestBody @Valid RegisterUserParam registerUserParam, BindingResult result) {
-        if (result.hasErrors()) {
-            return ResultResponse.genFailResult(result.getFieldError().getDefaultMessage());
-        } else {
+    public Result register(@Valid @RequestBody RegisterUserParam registerUserParam) {
+        // if (result.hasErrors()) {
+        //     return ResultResponse.genFailResult(result.getFieldError().getDefaultMessage());
+        // } else {
             return userService.saveUser(registerUserParam);
-        }
+        // }
     }
 
     @GetMapping

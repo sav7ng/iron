@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -41,10 +42,10 @@ import java.util.List;
  * @Date 2019/8/16 14:53
  * @Version 1.0
  **/
+@Slf4j
 @Configuration
 public class WebMvcConfigurer extends WebMvcConfigurationSupport {
 
-    private final Logger logger = LoggerFactory.getLogger(WebMvcConfigurer.class);
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件
 
@@ -64,41 +65,6 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
         converters.add(converter);
     }
 
-
-    //统一异常处理
-    @Override
-    public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        exceptionResolvers.add(new HandlerExceptionResolver() {
-            public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception e) {
-                Result result = new Result();
-                if (e instanceof ServiceException) {//业务失败的异常，如“账号或密码错误”
-                    result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
-                    logger.info(e.getMessage());
-                } else if (e instanceof NoHandlerFoundException) {
-                    result.setCode(ResultCode.NOT_FOUND).setMessage("接口 [" + request.getRequestURI() + "] 不存在");
-                } else if (e instanceof ServletException) {
-                    result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
-                } else {
-                    result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage("接口 [" + request.getRequestURI() + "] 内部错误，请联系管理员");
-                    String message;
-                    if (handler instanceof HandlerMethod) {
-                        HandlerMethod handlerMethod = (HandlerMethod) handler;
-                        message = String.format("接口 [%s] 出现异常，方法：%s.%s，异常摘要：%s",
-                                request.getRequestURI(),
-                                handlerMethod.getBean().getClass().getName(),
-                                handlerMethod.getMethod().getName(),
-                                e.getMessage());
-                    } else {
-                        message = e.getMessage();
-                    }
-                    logger.error(message, e);
-                }
-                responseResult(response, result);
-                return new ModelAndView();
-            }
-
-        });
-    }
 
     //解决跨域问题
     @Override
@@ -126,7 +92,7 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
                     if (pass) {
                         return true;
                     } else {
-                        logger.warn("签名认证失败，请求接口：{}，请求IP：{}，请求参数：{}",
+                        log.warn("签名认证失败，请求接口：{}，请求IP：{}，请求参数：{}",
                                 request.getRequestURI(), getIpAddress(request), JSON.toJSONString(request.getParameterMap()));
 
                         Result result = new Result();
@@ -156,7 +122,7 @@ public class WebMvcConfigurer extends WebMvcConfigurationSupport {
         try {
             response.getWriter().write(JSON.toJSONString(result));
         } catch (IOException ex) {
-            logger.error(ex.getMessage());
+            log.error(ex.getMessage());
         }
     }
 
