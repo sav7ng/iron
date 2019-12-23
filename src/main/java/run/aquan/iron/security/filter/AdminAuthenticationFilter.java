@@ -22,7 +22,7 @@ public class AdminAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         //对请求进行预处理
-        log.info("过滤器开始对请求进行预处理");
+        log.info("Admin过滤器开始对请求进行预处理");
         HttpServletRequest request = httpServletRequest;
         String requestUri = request.getRequestURI();
         System.out.println("请求的接口为：" + requestUri);

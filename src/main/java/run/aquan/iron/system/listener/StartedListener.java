@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import run.aquan.iron.system.service.SysUserService;
 
 /**
  * @Class StartedListener
@@ -25,13 +26,25 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     @Value("${iron.baseUrl}")
     private String baseUrl;
 
+    private final SysUserService sysUserService;
+
+    public StartedListener(SysUserService sysUserService) {
+        this.sysUserService = sysUserService;
+    }
+
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
         this.printStartInfo();
+        this.initAdmin();
     }
 
     private void printStartInfo() {
             log.debug("Iron doc was enable at  {}/swagger-ui.html", baseUrl);
+    }
+
+    private void initAdmin() {
+        Boolean init = sysUserService.init();
+        log.warn("Admin Whether initialization was successful:" + init);
     }
 
 }

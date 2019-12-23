@@ -25,8 +25,8 @@ public class IronConfiguration {
         authenticationFilter.setFilter(adminAuthenticationFilter);
         authenticationFilter.addUrlPatterns("/api/admin/*");
         authenticationFilter.setOrder(0);
-
         return authenticationFilter;
+
     }
 
 }

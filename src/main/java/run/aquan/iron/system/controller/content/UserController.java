@@ -1,4 +1,4 @@
-package run.aquan.iron.system.controller;
+package run.aquan.iron.system.controller.content;
 
 import io.swagger.annotations.ApiOperation;
 import org.springframework.data.domain.Page;
@@ -23,7 +23,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("/api/app/user")
+@RequestMapping("/api/content/user")
 public class UserController {
 
     private final UserService userService;

@@ -58,9 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstant.AUTH_LOGIN_URL).permitAll()
-                .antMatchers(HttpMethod.POST, "/api/app/user/login").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/app/user/register").permitAll()
-                .antMatchers("/api/admin/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/content/user/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/content/user/register").permitAll()
                 // 指定路径下的资源需要验证了的用户才能访问
                 .antMatchers("/api/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/**").hasRole("ADMIN")

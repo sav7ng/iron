@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @Class User
+ * @Class SysUser
  * @Description TODO
  * @Author Aquan
  * @Date 2019.12.23 23:29
@@ -28,9 +28,9 @@ import java.util.List;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Entity(name = "User")
-@Table(name = "user")
-public class User {
+@Entity(name = "SysUser")
+@Table(name = "sys_user")
+public class SysUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,9 +47,6 @@ public class User {
 
     @Column(name = "roles", columnDefinition = "varchar(200) comment '权限'")
     private String roles;
-
-    @Column(name = "sex", columnDefinition = "tinyint(1) default 0 comment '性别 0:保密 1:男 2:女'")
-    private Integer sex;
 
     @Column(name = "create_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
     @Temporal(TemporalType.TIMESTAMP)
