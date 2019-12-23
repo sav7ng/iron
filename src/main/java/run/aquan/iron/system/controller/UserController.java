@@ -23,7 +23,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/app/user")
 public class UserController {
 
     private final UserService userService;
@@ -43,11 +43,7 @@ public class UserController {
     @PostMapping("register")
     @ApiOperation("Register User")
     public Result register(@Valid @RequestBody RegisterUserParam registerUserParam) {
-        // if (result.hasErrors()) {
-        //     return ResultResponse.genFailResult(result.getFieldError().getDefaultMessage());
-        // } else {
-            return userService.saveUser(registerUserParam);
-        // }
+        return userService.saveUser(registerUserParam);
     }
 
     @GetMapping

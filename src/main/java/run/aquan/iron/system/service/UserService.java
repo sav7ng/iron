@@ -18,4 +18,5 @@ public interface UserService {
     User getById(Integer id);
 
     Page<User> pageBy(Pageable pageable);
+
 }
