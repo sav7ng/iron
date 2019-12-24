@@ -44,7 +44,7 @@ import java.util.List;
  **/
 @Slf4j
 @Configuration
-public class WebMvcConfigurer extends WebMvcConfigurationSupport {
+public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Value("${spring.profiles.active}")
     private String env;//当前激活的配置文件

@@ -2,6 +2,7 @@ package run.aquan.iron.security.entity;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.entity.User;
 
 import java.util.Collection;
@@ -34,6 +35,15 @@ public class JwtUser implements UserDetails {
         authorities = user.getRoles();
     }
 
+    /**
+     * 通过 SysUser 对象创建jwtUser
+     */
+    public JwtUser(SysUser sysUser) {
+        id = sysUser.getId();
+        username = sysUser.getUsername();
+        password = sysUser.getPassword();
+        authorities = sysUser.getRoles();
+    }
 
 
     @Override

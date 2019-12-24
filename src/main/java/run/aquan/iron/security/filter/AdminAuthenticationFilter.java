@@ -11,7 +11,7 @@ import java.io.IOException;
 
 /**
  * @Class AdminAuthenticationFilter
- * @Description TODO Admin后台管理用户认证过滤器
+ * @Description TODO Admin background management user authentication filter
  * @Author Aquan
  * @Date 2019/12/23 15:28
  * @Version 1.0

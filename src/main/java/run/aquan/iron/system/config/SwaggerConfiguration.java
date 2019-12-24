@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import run.aquan.iron.system.constants.IronConstant;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.AlternateTypeRule;
 import springfox.documentation.schema.AlternateTypeRuleConvention;
@@ -32,16 +33,28 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
  **/
 @Configuration
 @EnableSwagger2
-public class SwaggerConfigurer {
-
+public class SwaggerConfiguration {
 
     @Bean
-    public Docket createRestApi() {
+    public Docket createContentApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .groupName("run.aquan.iron.system")
+                .groupName(IronConstant.CONTENT_CONTROLLER_PACKAGE)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("run.aquan.iron.system.controller"))
+                .apis(RequestHandlerSelectors.basePackage(IronConstant.CONTENT_CONTROLLER_PACKAGE))
+                .paths(PathSelectors.any())
+                .build()
+                .securitySchemes(securitySchemes())
+                .securityContexts(securityContexts());
+    }
+
+    @Bean
+    public Docket createAdminApi() {
+        return new Docket(DocumentationType.SWAGGER_2)
+                .groupName(IronConstant.ADMIN_CONTROLLER_PACKAGE)
+                .apiInfo(apiInfo())
+                .select()
+                .apis(RequestHandlerSelectors.basePackage(IronConstant.ADMIN_CONTROLLER_PACKAGE))
                 .paths(PathSelectors.any())
                 .build()
                 .securitySchemes(securitySchemes())

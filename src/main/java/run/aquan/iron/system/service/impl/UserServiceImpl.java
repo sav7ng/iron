@@ -3,7 +3,6 @@ package run.aquan.iron.system.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,9 +20,7 @@ import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.repository.UserRepository;
 import run.aquan.iron.system.service.UserService;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,19 +38,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result login(LoginParam loginParam) {
-
         String username = loginParam.getUsername();
         try {
             User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             boolean matches = bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword());
             if (matches) {
-                JwtUser jwtUser = new JwtUser(user);
-                List<String> roles = jwtUser.getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(Collectors.toList());
-                String token = JwtTokenUtils.createToken(jwtUser.getUsername(), roles, loginParam.getRememberMe());
-                AuthToken authToken = AuthToken.builder().accessToken(token).build();
+                AuthToken authToken = JwtTokenUtils.createToken(new JwtUser(user), loginParam.getRememberMe());
                 return ResultResponse.genSuccessResult(authToken);
             } else {
                 return ResultResponse.genFailResult("Password erro");
@@ -62,7 +52,6 @@ public class UserServiceImpl implements UserService {
             log.error(e.getMessage());
             return ResultResponse.genFailResult("No user found with username " + username);
         }
-
     }
 
     @Override

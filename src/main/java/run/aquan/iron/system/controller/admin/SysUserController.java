@@ -1,11 +1,14 @@
 package run.aquan.iron.system.controller.admin;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
+import run.aquan.iron.system.model.params.LoginParam;
+import run.aquan.iron.system.service.SysUserService;
+
+import javax.validation.Valid;
 
 /**
  * @Class SysUserController
@@ -18,9 +21,24 @@ import run.aquan.iron.system.core.ResultResponse;
 @RequestMapping("/api/admin/user")
 public class SysUserController {
 
-    @GetMapping("test")
+    private final CurrentUser currentUser;
+
+    private final SysUserService sysUserService;
+
+    public SysUserController(CurrentUser currentUser, SysUserService sysUserService) {
+        this.currentUser = currentUser;
+        this.sysUserService = sysUserService;
+    }
+
+    @PostMapping("login")
+    public Result login(@Valid @RequestBody LoginParam loginParam) {
+        return sysUserService.login(loginParam);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public Result getByToken() {
-        String result = "拦截器";
+        String result = "当前访问该接口的用户为：" + currentUser.getCurrentSysUser().toString();
         return ResultResponse.genSuccessResult(result);
     }
 

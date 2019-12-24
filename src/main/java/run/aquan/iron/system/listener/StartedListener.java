@@ -12,7 +12,7 @@ import run.aquan.iron.system.service.SysUserService;
 
 /**
  * @Class StartedListener
- * @Description TODO 在应用程序启动后执行的方法
+ * @Description TODO Method to execute after application launch
  * @Author Aquan
  * @Date 2019/12/20 18:18
  * @Version 1.0
@@ -43,8 +43,8 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
     private void initAdmin() {
-        Boolean init = sysUserService.init();
-        log.warn("Admin Whether initialization was successful:" + init);
+        String init = sysUserService.init();
+        log.info("Admin Whether initialization was successful:" + init);
     }
 
 }

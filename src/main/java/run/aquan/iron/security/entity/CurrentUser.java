@@ -3,6 +3,7 @@ package run.aquan.iron.security.entity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import run.aquan.iron.security.service.SysUserDetailsServiceImpl;
 import run.aquan.iron.security.service.UserDetailsServiceImpl;
 
 /**
@@ -17,12 +18,19 @@ public class CurrentUser {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    public CurrentUser(UserDetailsServiceImpl userDetailsService) {
+    private final SysUserDetailsServiceImpl sysUserDetailsService;
+
+    public CurrentUser(UserDetailsServiceImpl userDetailsService, SysUserDetailsServiceImpl sysUserDetailsService) {
         this.userDetailsService = userDetailsService;
+        this.sysUserDetailsService = sysUserDetailsService;
     }
 
     public JwtUser getCurrentUser() {
         return (JwtUser) userDetailsService.loadUserByUsername(getCurrentUserName());
+    }
+
+    public JwtUser getCurrentSysUser() {
+        return (JwtUser) sysUserDetailsService.loadUserByUsername(getCurrentUserName());
     }
 
     /**

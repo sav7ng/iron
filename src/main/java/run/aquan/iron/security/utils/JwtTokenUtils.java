@@ -4,8 +4,11 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import run.aquan.iron.security.constants.SecurityConstant;
+import run.aquan.iron.security.entity.JwtUser;
+import run.aquan.iron.system.model.dto.AuthToken;
 
 import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
@@ -25,6 +28,16 @@ public class JwtTokenUtils {
 
     private static byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
     private static SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
+
+    public static AuthToken createToken(JwtUser jwtUser, boolean isRememberMe) {
+        List<String> roles = jwtUser.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        String token = JwtTokenUtils.createToken(jwtUser.getUsername(), roles, isRememberMe);
+        AuthToken authToken = AuthToken.builder().accessToken(token).build();
+        return authToken;
+    }
 
     public static String createToken(String username, List<String> roles, boolean isRememberMe) {
         long expiration = isRememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
@@ -67,5 +80,6 @@ public class JwtTokenUtils {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
 }
 

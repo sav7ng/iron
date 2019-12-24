@@ -5,30 +5,30 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
+import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.entity.User;
-import run.aquan.iron.system.service.UserService;
+import run.aquan.iron.system.service.SysUserService;
 
 /**
- * @Class UserDetailsServiceImpl
+ * @Class SysUserDetailsServiceImpl
  * @Description TODO
  * @Author Aquan
- * @Date 2019/12/19 16:41
+ * @Date 2019/12/24 10:43
  * @Version 1.0
  **/
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class SysUserDetailsServiceImpl implements UserDetailsService {
 
-    private final UserService userService;
+    private final SysUserService sysUserService;
 
-    public UserDetailsServiceImpl(UserService userService) {
-        this.userService = userService;
+    public SysUserDetailsServiceImpl(SysUserService sysUserService) {
+        this.sysUserService = sysUserService;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userService.findUserByUserName(username);
-        return new JwtUser(user);
+        SysUser sysUser = sysUserService.findUserByUserName(username);
+        return new JwtUser(sysUser);
     }
 
 }
-
