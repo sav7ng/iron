@@ -1,15 +1,23 @@
 package run.aquan.iron;
 
 import com.google.common.collect.Lists;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import run.aquan.iron.security.constants.SecurityConstant;
+import run.aquan.iron.security.utils.JwtTokenUtils;
 
 import javax.crypto.Mac;
+import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+import javax.xml.bind.DatatypeConverter;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +96,17 @@ public class MyTest {
         System.out.println("第二次加密密文是否验证通过: " + encoder.matches(password, encode1));
     }
 
+    @Test
+    public void tokenGetBoby() {
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
+        SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzI2OTM4OCwic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3ODc0MTg4fQ.Gf1sfrU0qrOJWIHvl57kutq8CPlujPnKkQp-yI9mmDM";
+        Claims body = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+        log.warn(body.getExpiration().toString());
+    }
 
 
 }
