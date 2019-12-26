@@ -1,5 +1,6 @@
 package run.aquan.iron;
 
+import cn.hutool.core.date.DateUtil;
 import com.google.common.collect.Lists;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import run.aquan.iron.security.constants.SecurityConstant;
-import run.aquan.iron.security.utils.JwtTokenUtils;
 
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
@@ -100,12 +100,14 @@ public class MyTest {
     public void tokenGetBoby() {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
         SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzI2OTM4OCwic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3ODc0MTg4fQ.Gf1sfrU0qrOJWIHvl57kutq8CPlujPnKkQp-yI9mmDM";
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzMzODUxMywic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3OTQzMzEzfQ.LBp7T28uWf2IoJI8qPg7TQeuJDP1iFxR4hJh6uDn6xQ";
         Claims body = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
-        log.warn(body.getExpiration().toString());
+        Date date = DateUtil.parse(body.getExpiration().toString());
+        String formatDateTime = DateUtil.formatDateTime(date);
+        log.warn(formatDateTime);
     }
 
 

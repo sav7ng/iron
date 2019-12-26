@@ -5,7 +5,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.security.utils.JwtTokenUtils;
+import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.enums.Datalevel;
@@ -14,7 +14,9 @@ import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
+import run.aquan.iron.system.utils.IronDateUtil;
 
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -71,12 +73,15 @@ public class SysUserServiceImpl implements SysUserService {
         String username = loginParam.getUsername();
         try {
             SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-            boolean matches = bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword());
-            if (matches) {
-                AuthToken authToken = JwtTokenUtils.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
-                return ResultResponse.genSuccessResult(authToken);
+            if (bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword())) {
+                synchronized (this) {
+                    AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
+                    sysUser.setExpirationTime(authToken.getExpiration());
+                    sysUserRepository.saveAndFlush(sysUser);
+                    return ResultResponse.genSuccessResult(authToken);
+                }
             } else {
-                return ResultResponse.genFailResult("Password erro");
+                return ResultResponse.genFailResult("Admin Password erro");
             }
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());

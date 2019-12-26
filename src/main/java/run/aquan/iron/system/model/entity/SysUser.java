@@ -56,6 +56,10 @@ public class SysUser {
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateTime;
 
+    @Column(name = "expiration_time", columnDefinition = "timestamp comment 'token过期时间'")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expirationTime;
+
     @Column(name = "datalevel", columnDefinition = "tinyint(1) default 1 comment '数据级别 0:已删除 1:未删除'")
     private Datalevel datalevel;
 

@@ -4,14 +4,15 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-import org.springframework.util.StringUtils;
 import run.aquan.iron.security.constants.SecurityConstant;
-import run.aquan.iron.security.utils.JwtTokenUtils;
+import run.aquan.iron.security.utils.JwtTokenUtil;
+import run.aquan.iron.system.exception.TokenExpirationException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -39,31 +40,41 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String authorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
+        String apiAuthorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
+        String adminAuthorization = request.getHeader(SecurityConstant.ADMIN_TOKEN_HEADER);
         // 如果请求头中没有token信息则直接放行了
-        if (authorization == null || !authorization.startsWith(SecurityConstant.TOKEN_PREFIX)) {
+        if ((apiAuthorization == null || !apiAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX)) && (adminAuthorization == null || !adminAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX))) {
             chain.doFilter(request, response);
             return;
         }
+        Boolean isAdmin = StringUtils.isNotBlank(adminAuthorization);
+        String authorization = isAdmin ? adminAuthorization : apiAuthorization;
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(authorization, isAdmin);
         // 如果请求头中有token，则进行解析，并且设置授权信息
-        SecurityContextHolder.getContext().setAuthentication(getAuthentication(authorization));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         super.doFilterInternal(request, response, chain);
+
     }
 
     /**
      * 获取用户认证信息 Authentication
      */
-    private UsernamePasswordAuthenticationToken getAuthentication(String authorization) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String authorization, Boolean isAdmin) {
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         try {
-            String username = JwtTokenUtils.getUsernameByToken(token);
-            logger.info("checking username:" + username);
-            // 通过 token 获取用户具有的角色
-            List<SimpleGrantedAuthority> userRolesByToken = JwtTokenUtils.getUserRolesByToken(token);
-            if (!StringUtils.isEmpty(username)) {
-                return new UsernamePasswordAuthenticationToken(username, null, userRolesByToken);
+            Boolean check = JwtTokenUtil.checkToken(token, isAdmin);
+            if (check) {
+                String username = JwtTokenUtil.getUsernameByToken(token);
+                logger.info("checking username:" + username);
+                // 通过 token 获取用户具有的角色
+                List<SimpleGrantedAuthority> userRolesByToken = JwtTokenUtil.getUserRolesByToken(token);
+                if (StringUtils.isNotBlank(username)) {
+                    return new UsernamePasswordAuthenticationToken(username, null, userRolesByToken);
+                }
+            } else {
+                throw new TokenExpirationException();
             }
-        } catch (SignatureException | ExpiredJwtException | MalformedJwtException | IllegalArgumentException exception) {
+        } catch (SignatureException | ExpiredJwtException | MalformedJwtException | IllegalArgumentException | TokenExpirationException exception) {
             log.warn("Request to parse JWT with invalid signature . Detail : " + exception.getMessage());
         }
         return null;

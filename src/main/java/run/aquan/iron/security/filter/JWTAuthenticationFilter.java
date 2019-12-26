@@ -2,8 +2,6 @@ package run.aquan.iron.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,7 +11,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.entity.LoginUser;
-import run.aquan.iron.security.utils.JwtTokenUtils;
+import run.aquan.iron.security.utils.JwtTokenUtil;
+import run.aquan.iron.system.model.dto.AuthToken;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -56,7 +55,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                     loginUser.getUsername(), loginUser.getPassword());
             return authenticationManager.authenticate(authRequest);
         } catch (IOException e) {
-            // e.printStackTrace();
             log.error(e.getMessage());
             return null;
         }
@@ -77,9 +75,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         // 创建 Token
-        String token = JwtTokenUtils.createToken(jwtUser.getUsername(), roles, rememberMe.get());
+        AuthToken authToken = JwtTokenUtil.createToken(jwtUser, rememberMe.get());
         // Http Response Header 中返回 Token
-        response.setHeader(SecurityConstant.TOKEN_HEADER, token);
+        response.setHeader(SecurityConstant.TOKEN_HEADER, authToken.getAccessToken());
     }
 
     @Override

@@ -4,12 +4,21 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.stereotype.Component;
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.system.model.entity.SysUser;
+import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.service.SysUserService;
+import run.aquan.iron.system.service.UserService;
+import run.aquan.iron.system.utils.IronDateUtil;
 
+import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.xml.bind.DatatypeConverter;
 import java.util.Arrays;
@@ -24,24 +33,39 @@ import java.util.stream.Collectors;
  * @Date 2019/12/19 16:30
  * @Version 1.0
  **/
-public class JwtTokenUtils {
+@Slf4j
+@Component
+public class JwtTokenUtil {
 
     private static byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
     private static SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
 
-    public static AuthToken createToken(JwtUser jwtUser, boolean isRememberMe) {
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private SysUserService sysUserService;
+
+    public static JwtTokenUtil jwtTokenUtil;
+
+    @PostConstruct
+    public void init() {
+        jwtTokenUtil = this;
+    }
+
+    public static AuthToken createToken(JwtUser jwtUser, Boolean isRememberMe) {
         List<String> roles = jwtUser.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        String token = JwtTokenUtils.createToken(jwtUser.getUsername(), roles, isRememberMe);
-        AuthToken authToken = AuthToken.builder().accessToken(token).build();
+        long expiration = isRememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
+        Long currentTimeMillis = System.currentTimeMillis() + expiration * 1000;
+        String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis);
+        AuthToken authToken = AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).build();
         return authToken;
     }
 
-    public static String createToken(String username, List<String> roles, boolean isRememberMe) {
-        long expiration = isRememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
-
+    public static String createToken(String username, List<String> roles, Long currentTimeMillis) {
         String tokenPrefix = Jwts.builder()
                 .setHeaderParam("typ", SecurityConstant.TOKEN_TYPE)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
@@ -49,7 +73,7 @@ public class JwtTokenUtils {
                 .setIssuer("Aquan")
                 .setIssuedAt(new Date())
                 .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000))
+                .setExpiration(new Date(currentTimeMillis))
                 .compact();
         return SecurityConstant.TOKEN_PREFIX + tokenPrefix;
     }
@@ -79,6 +103,22 @@ public class JwtTokenUtils {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public static Date getTokenExpiration(String token) {
+        Claims tokenBody = getTokenBody(token);
+        return tokenBody.getExpiration();
+    }
+
+    public static Boolean checkToken(String token, Boolean isAdmin) {
+        Claims tokenBody = getTokenBody(token);
+        if (isAdmin) {
+            SysUser sysUser = jwtTokenUtil.sysUserService.findUserByUserName(tokenBody.getSubject());
+            return IronDateUtil.checkDate(sysUser.getExpirationTime(), tokenBody.getExpiration());
+        } else {
+            User user = jwtTokenUtil.userService.findUserByUserName(tokenBody.getSubject());
+            return IronDateUtil.checkDate(user.getExpirationTime(), tokenBody.getExpiration());
+        }
     }
 
 }

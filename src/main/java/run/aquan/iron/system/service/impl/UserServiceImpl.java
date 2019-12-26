@@ -1,6 +1,7 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.jpa.HibernateEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -8,7 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.security.utils.JwtTokenUtils;
+import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.enums.Datalevel;
@@ -20,6 +21,7 @@ import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.repository.UserRepository;
 import run.aquan.iron.system.service.UserService;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Slf4j
@@ -41,12 +43,15 @@ public class UserServiceImpl implements UserService {
         String username = loginParam.getUsername();
         try {
             User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-            boolean matches = bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword());
-            if (matches) {
-                AuthToken authToken = JwtTokenUtils.createToken(new JwtUser(user), loginParam.getRememberMe());
-                return ResultResponse.genSuccessResult(authToken);
+            if (bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword())) {
+                synchronized (this) {
+                    AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
+                    user.setExpirationTime(authToken.getExpiration());
+                    User save = userRepository.saveAndFlush(user);
+                    return ResultResponse.genSuccessResult(authToken);
+                }
             } else {
-                return ResultResponse.genFailResult("Password erro");
+                return ResultResponse.genFailResult("User Password erro");
             }
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -54,9 +59,22 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // @Override
+    // public Result logout(JwtUser currentUser) {
+    //     String username = currentUser.getUsername();
+    //     try {
+    //         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+    //         userRepository.saveAndFlush(user);
+    //         return ResultResponse.genSuccessResult("成功退出");
+    //     } catch (UsernameNotFoundException e) {
+    //         return ResultResponse.genFailResult(e.getMessage());
+    //     }
+    // }
+
     @Override
-    public User findUserByUserName(String userName) {
-        User user = userRepository.findByUsername(userName).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + userName));
+    public User findUserByUserName(String username) {
+        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+        user.setExpirationTime(new Date());
         return user;
     }
 
@@ -91,5 +109,6 @@ public class UserServiceImpl implements UserService {
         Page<User> users = userRepository.findAllByDatalevel(Datalevel.EFFECTIVE, pageable);
         return users;
     }
+
 
 }

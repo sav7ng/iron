@@ -33,6 +33,7 @@ public class SecurityConstant {
     public static final String JWT_SECRET_KEY = "092F2853DB047AD2D4AE2D79717129BD7ACA66E7F2CB1C11F292F301FF5EB805";
 
     // JWT token defaults
+    public static final String ADMIN_TOKEN_HEADER = "ADMIN-Authorization";
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";

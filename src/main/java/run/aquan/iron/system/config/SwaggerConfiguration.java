@@ -1,11 +1,13 @@
 package run.aquan.iron.system.config;
 
 import com.fasterxml.classmate.TypeResolver;
+import io.swagger.models.auth.In;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.system.constants.IronConstant;
 import springfox.documentation.builders.*;
 import springfox.documentation.schema.AlternateTypeRule;
@@ -17,7 +19,6 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -44,8 +45,8 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage(IronConstant.CONTENT_CONTROLLER_PACKAGE))
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+                .securitySchemes(contentApiKeys())
+                .securityContexts(contentSecurityContext());
     }
 
     @Bean
@@ -57,8 +58,8 @@ public class SwaggerConfiguration {
                 .apis(RequestHandlerSelectors.basePackage(IronConstant.ADMIN_CONTROLLER_PACKAGE))
                 .paths(PathSelectors.any())
                 .build()
-                .securitySchemes(securitySchemes())
-                .securityContexts(securityContexts());
+                .securitySchemes(adminApiKeys())
+                .securityContexts(adminSecurityContext());
     }
 
 
@@ -72,27 +73,40 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    private List<ApiKey> securitySchemes() {
-        List<ApiKey> apiKeys = new ArrayList<>();
-        apiKeys.add(new ApiKey("token", "Authorization", "header"));
-        return apiKeys;
+    private List<ApiKey> adminApiKeys() {
+        return Arrays.asList(new ApiKey("Token from header", SecurityConstant.ADMIN_TOKEN_HEADER, In.HEADER.name()));
     }
 
-    private List<SecurityContext> securityContexts() {
-        List<SecurityContext> securityContexts = new ArrayList<>();
-        securityContexts.add(SecurityContext.builder()
-                .securityReferences(defaultAuth())
-                .forPaths(PathSelectors.regex("^(?!auth).*$")).build());
-        return securityContexts;
+    private List<SecurityContext> adminSecurityContext() {
+        return Collections.singletonList(
+                SecurityContext.builder()
+                        .securityReferences(defaultAuth())
+                        .forPaths(PathSelectors.regex("/api/admin/.*"))
+                        .build()
+        );
+    }
+
+    private List<ApiKey> contentApiKeys() {
+        return Arrays.asList(new ApiKey("Access key from header", SecurityConstant.TOKEN_HEADER, In.HEADER.name()));
+    }
+
+    private List<SecurityContext> contentSecurityContext() {
+        return Collections.singletonList(
+                SecurityContext.builder()
+                        .securityReferences(contentApiAuth())
+                        .forPaths(PathSelectors.regex("/api/content/.*"))
+                        .build()
+        );
     }
 
     private List<SecurityReference> defaultAuth() {
-        AuthorizationScope authorizationScope = new AuthorizationScope("global", "accessEverything");
-        AuthorizationScope[] authorizationScopes = new AuthorizationScope[1];
-        authorizationScopes[0] = authorizationScope;
-        List<SecurityReference> securityReferences = new ArrayList<>();
-        securityReferences.add(new SecurityReference("token", authorizationScopes));
-        return securityReferences;
+        AuthorizationScope[] authorizationScopes = {new AuthorizationScope("Admin api", "Access admin api")};
+        return Arrays.asList(new SecurityReference("Token from header", authorizationScopes));
+    }
+
+    private List<SecurityReference> contentApiAuth() {
+        AuthorizationScope[] authorizationScopes = {new AuthorizationScope("content api", "Access content api")};
+        return Arrays.asList(new SecurityReference("Access key from header", authorizationScopes));
     }
 
     @Bean
