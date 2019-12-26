@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
                 synchronized (this) {
                     AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
                     user.setExpirationTime(authToken.getExpiration());
-                    User save = userRepository.saveAndFlush(user);
+                    userRepository.saveAndFlush(user);
                     return ResultResponse.genSuccessResult(authToken);
                 }
             } else {
@@ -59,23 +59,28 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // @Override
-    // public Result logout(JwtUser currentUser) {
-    //     String username = currentUser.getUsername();
-    //     try {
-    //         User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-    //         userRepository.saveAndFlush(user);
-    //         return ResultResponse.genSuccessResult("成功退出");
-    //     } catch (UsernameNotFoundException e) {
-    //         return ResultResponse.genFailResult(e.getMessage());
-    //     }
-    // }
+    @Override
+    public Result logout(JwtUser currentUser) {
+        String username = currentUser.getUsername();
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            user.setExpirationTime(new Date());
+            userRepository.saveAndFlush(user);
+            return ResultResponse.genSuccessResult("成功退出");
+        } catch (UsernameNotFoundException e) {
+            return ResultResponse.genFailResult(e.getMessage());
+        }
+    }
 
     @Override
     public User findUserByUserName(String username) {
-        User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-        user.setExpirationTime(new Date());
-        return user;
+        try {
+            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            return user;
+        } catch (UsernameNotFoundException e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 
     @Override

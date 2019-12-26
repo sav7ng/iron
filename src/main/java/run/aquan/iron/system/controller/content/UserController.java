@@ -47,9 +47,8 @@ public class UserController {
     @PostMapping("logout")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public Result logout() {
-        // JwtUser currentUser = this.currentUser.getCurrentUser();
-        // return userService.logout(currentUser);
-        return null;
+        JwtUser currentUser = this.currentUser.getCurrentUser();
+        return userService.logout(currentUser);
     }
 
     @PostMapping("register")

@@ -20,5 +20,5 @@ public interface UserService {
 
     Page<User> pageBy(Pageable pageable);
 
-    // Result logout(JwtUser currentUser);
+    Result logout(JwtUser currentUser);
 }
