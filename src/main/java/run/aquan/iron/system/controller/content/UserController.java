@@ -27,7 +27,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("/api/content/user")
+@RequestMapping("/api/content/users")
 public class UserController {
 
     private final UserService userService;

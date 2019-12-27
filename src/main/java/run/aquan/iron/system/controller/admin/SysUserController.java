@@ -5,6 +5,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.CurrentUser;
+import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
@@ -22,7 +23,7 @@ import javax.validation.Valid;
  * @Version 1.0
  **/
 @RestController
-@RequestMapping("/api/admin/user")
+@RequestMapping("/api/admin/users")
 public class SysUserController {
 
     private final CurrentUser currentUser;
@@ -37,6 +38,12 @@ public class SysUserController {
     @PostMapping("login")
     public Result login(@Valid @RequestBody LoginParam loginParam) {
         return sysUserService.login(loginParam);
+    }
+
+    @PostMapping("logout")
+    public Result logout() {
+        JwtUser currentSysUser = currentUser.getCurrentSysUser();
+        return sysUserService.logout(currentSysUser);
     }
 
     @GetMapping

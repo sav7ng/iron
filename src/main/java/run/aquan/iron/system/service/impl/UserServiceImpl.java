@@ -1,7 +1,6 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.jpa.HibernateEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -68,6 +67,7 @@ public class UserServiceImpl implements UserService {
             userRepository.saveAndFlush(user);
             return ResultResponse.genSuccessResult("成功退出");
         } catch (UsernameNotFoundException e) {
+            log.error(e.getMessage());
             return ResultResponse.genFailResult(e.getMessage());
         }
     }

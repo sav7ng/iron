@@ -14,7 +14,6 @@ import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
-import run.aquan.iron.system.utils.IronDateUtil;
 
 import java.util.Date;
 import java.util.Optional;
@@ -86,6 +85,20 @@ public class SysUserServiceImpl implements SysUserService {
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
             return ResultResponse.genFailResult("No user found with username " + username);
+        }
+    }
+
+    @Override
+    public Result logout(JwtUser currentSysUser) {
+        String username = currentSysUser.getUsername();
+        try {
+            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            sysUser.setExpirationTime(new Date());
+            sysUserRepository.saveAndFlush(sysUser);
+            return ResultResponse.genSuccessResult("成功退出");
+        } catch (UsernameNotFoundException e) {
+            log.error(e.getMessage());
+            return ResultResponse.genFailResult(e.getMessage());
         }
     }
 
