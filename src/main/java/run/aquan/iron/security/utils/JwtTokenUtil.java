@@ -53,12 +53,12 @@ public class JwtTokenUtil {
         jwtTokenUtil = this;
     }
 
-    public static AuthToken createToken(JwtUser jwtUser, Boolean isRememberMe) {
+    public static AuthToken createToken(JwtUser jwtUser, Boolean rememberMe) {
         List<String> roles = jwtUser.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        long expiration = isRememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
+        long expiration = rememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
         Long currentTimeMillis = System.currentTimeMillis() + expiration * 1000;
         String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis);
         AuthToken authToken = AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).build();
@@ -78,7 +78,7 @@ public class JwtTokenUtil {
         return SecurityConstant.TOKEN_PREFIX + tokenPrefix;
     }
 
-    private boolean isTokenExpired(String token) {
+    private boolean tokenExpired(String token) {
         Date expiredDate = getTokenBody(token).getExpiration();
         return expiredDate.before(new Date());
     }
@@ -110,9 +110,9 @@ public class JwtTokenUtil {
         return tokenBody.getExpiration();
     }
 
-    public static Boolean checkToken(String token, Boolean isAdmin) {
+    public static Boolean checkToken(String token, Boolean admin) {
         Claims tokenBody = getTokenBody(token);
-        if (isAdmin) {
+        if (admin) {
             SysUser sysUser = jwtTokenUtil.sysUserService.findUserByUserName(tokenBody.getSubject());
             return IronDateUtil.checkDate(sysUser.getExpirationTime(), tokenBody.getExpiration());
         } else {

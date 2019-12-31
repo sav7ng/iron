@@ -47,9 +47,9 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             chain.doFilter(request, response);
             return;
         }
-        Boolean isAdmin = StringUtils.isNotBlank(adminAuthorization);
-        String authorization = isAdmin ? adminAuthorization : apiAuthorization;
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(authorization, isAdmin);
+        Boolean admin = StringUtils.isNotBlank(adminAuthorization);
+        String authorization = admin ? adminAuthorization : apiAuthorization;
+        UsernamePasswordAuthenticationToken authentication = getAuthentication(authorization, admin);
         // 如果请求头中有token，则进行解析，并且设置授权信息
         SecurityContextHolder.getContext().setAuthentication(authentication);
         super.doFilterInternal(request, response, chain);
@@ -59,10 +59,10 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
     /**
      * 获取用户认证信息 Authentication
      */
-    private UsernamePasswordAuthenticationToken getAuthentication(String authorization, Boolean isAdmin) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String authorization, Boolean admin) {
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         try {
-            Boolean check = JwtTokenUtil.checkToken(token, isAdmin);
+            Boolean check = JwtTokenUtil.checkToken(token, admin);
             if (check) {
                 String username = JwtTokenUtil.getUsernameByToken(token);
                 logger.info("checking username:" + username);
