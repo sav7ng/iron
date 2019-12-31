@@ -41,7 +41,7 @@ public class UserServiceImpl implements UserService {
     public Result login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             if (bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword())) {
                 synchronized (this) {
                     AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
     public Result logout(JwtUser currentUser) {
         String username = currentUser.getUsername();
         try {
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             user.setExpirationTime(new Date());
             userRepository.saveAndFlush(user);
             return ResultResponse.genSuccessResult("成功退出");
@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByUserName(String username) {
         try {
-            User user = userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             return user;
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Result saveUser(RegisterUserParam registerUserParam) {
-        Optional<User> optionalUser = userRepository.findByUsername(registerUserParam.getUsername());
+        Optional<User> optionalUser = userRepository.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
         try {
             if (optionalUser.isPresent()) {
                 throw new UserNameAlreadyExistException("User name already exist!Please choose another user name.");
