@@ -42,17 +42,15 @@ public class SysUserServiceImpl implements SysUserService {
     public String init() {
         // 防止重复初始化
         Optional<SysUser> admin = sysUserRepository.findByUsernameAndDatalevel("admin", Datalevel.EFFECTIVE);
-        if (!admin.isPresent()) {
-            SysUser sysUser = SysUser.builder().username("admin").password(bCryptPasswordEncoder.encode("aquan")).roles("ADMIN").build();
-            try {
-                sysUserRepository.save(sysUser);
-                return "initialized successfully";
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                return "initialization failed";
-            }
-        } else {
+        if (admin.isPresent())
             return "No need to repeat initialization";
+        SysUser sysUser = SysUser.builder().username("admin").password(bCryptPasswordEncoder.encode("aquan")).roles("ADMIN").build();
+        try {
+            sysUserRepository.save(sysUser);
+            return "initialized successfully";
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return "initialization failed";
         }
     }
 
@@ -72,15 +70,13 @@ public class SysUserServiceImpl implements SysUserService {
         String username = loginParam.getUsername();
         try {
             SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-            if (bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword())) {
-                synchronized (this) {
-                    AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
-                    sysUser.setExpirationTime(authToken.getExpiration());
-                    sysUserRepository.saveAndFlush(sysUser);
-                    return ResultResponse.genSuccessResult(authToken);
-                }
-            } else {
+            if (!bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword()))
                 return ResultResponse.genFailResult("Admin Password erro");
+            synchronized (this) {
+                AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
+                sysUser.setExpirationTime(authToken.getExpiration());
+                sysUserRepository.saveAndFlush(sysUser);
+                return ResultResponse.genSuccessResult(authToken);
             }
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());

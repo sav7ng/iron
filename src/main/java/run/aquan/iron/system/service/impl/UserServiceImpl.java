@@ -87,9 +87,8 @@ public class UserServiceImpl implements UserService {
     public Result saveUser(RegisterUserParam registerUserParam) {
         Optional<User> optionalUser = userRepository.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
         try {
-            if (optionalUser.isPresent()) {
+            if (optionalUser.isPresent())
                 throw new UserNameAlreadyExistException("User name already exist!Please choose another user name.");
-            }
             User user = User.builder()
                     .username(registerUserParam.getUsername())
                     .password(bCryptPasswordEncoder.encode(registerUserParam.getPassword()))
