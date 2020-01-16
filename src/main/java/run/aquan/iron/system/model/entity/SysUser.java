@@ -60,7 +60,7 @@ public class SysUser {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
 
-    @Column(name = "datalevel", columnDefinition = "tinyint(1) default 1 comment '数据级别 0:已删除 1:未删除'")
+    @Column(name = "datalevel", columnDefinition = "tinyint(1) default '1' comment '数据级别 0:已删除 1:未删除'")
     private Datalevel datalevel;
 
     public List<SimpleGrantedAuthority> getRoles() {

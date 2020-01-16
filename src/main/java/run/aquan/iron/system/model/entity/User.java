@@ -48,7 +48,7 @@ public class User {
     @Column(name = "roles", columnDefinition = "varchar(200) comment '权限'")
     private String roles;
 
-    @Column(name = "sex", columnDefinition = "tinyint(1) default 0 comment '性别 0:保密 1:男 2:女'")
+    @Column(name = "sex", columnDefinition = "tinyint(1) default '0' comment '性别 0:保密 1:男 2:女'")
     private Integer sex;
 
     @Column(name = "create_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
@@ -63,7 +63,7 @@ public class User {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
 
-    @Column(name = "datalevel", columnDefinition = "tinyint(1) default 1 comment '数据级别 0:已删除 1:未删除'")
+    @Column(name = "datalevel", columnDefinition = "tinyint(1) default '1' comment '数据级别 0:已删除 1:未删除'")
     private Datalevel datalevel;
 
     public List<SimpleGrantedAuthority> getRoles() {
