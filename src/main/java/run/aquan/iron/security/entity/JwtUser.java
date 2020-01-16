@@ -45,6 +45,9 @@ public class JwtUser implements UserDetails {
         authorities = sysUser.getRoles();
     }
 
+    public Integer getId() {
+        return id;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
