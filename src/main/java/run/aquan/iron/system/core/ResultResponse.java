@@ -30,5 +30,13 @@ public class ResultResponse {
                 .setCode(ResultCode.FAIL)
                 .setMessage(message);
     }
+
+
+    public static Result genUnauthorizedResult(String message) {
+        return new Result()
+                .setCode(ResultCode.UNAUTHORIZED)
+                .setMessage(message);
+    }
+
 }
 

@@ -1,5 +1,7 @@
 package run.aquan.iron.system.model.params;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

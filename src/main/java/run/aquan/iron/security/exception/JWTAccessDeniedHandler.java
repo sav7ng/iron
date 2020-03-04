@@ -21,7 +21,9 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
      */
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException {
-        accessDeniedException = new AccessDeniedException("Sorry you don not enough permissions to access it!");
-        response.sendError(HttpServletResponse.SC_FORBIDDEN, accessDeniedException.getMessage());
+        // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
+        // log.error(authException.getMessage());
+        // 重定向到
+        response.sendRedirect("/iron/api/content/error");
     }
 }

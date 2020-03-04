@@ -35,5 +35,11 @@ public class ControllerExceptionHandler {
         return ResultResponse.genFailResult(String.format("请求字段缺失, 类型为 %s，名称为 %s", e.getParameterType(), e.getParameterName()));
     }
 
+    @ExceptionHandler(IronException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Result handleMethodIronException(IronException e) {
+        log.error(String.format("系统错误：%s", e.getMessage()));
+        return ResultResponse.genFailResult(String.format("系统错误：%s", e.getMessage()));
+    }
 
 }
