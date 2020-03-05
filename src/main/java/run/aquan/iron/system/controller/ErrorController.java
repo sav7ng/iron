@@ -1,4 +1,4 @@
-package run.aquan.iron.system.controller.content;
+package run.aquan.iron.system.controller;
 
 import io.swagger.annotations.Api;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ import run.aquan.iron.system.core.ResultResponse;
  **/
 @Api(tags = "统一错误处理模块")
 @RestController
-@RequestMapping("/api/content/error")
+@RequestMapping("/api/error")
 public class ErrorController {
 
     @GetMapping

@@ -24,6 +24,6 @@ public class JWTAccessDeniedHandler implements AccessDeniedHandler {
         // response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
         // log.error(authException.getMessage());
         // 重定向到
-        response.sendRedirect("/iron/api/content/error");
+        response.sendRedirect("/iron/api/error");
     }
 }
