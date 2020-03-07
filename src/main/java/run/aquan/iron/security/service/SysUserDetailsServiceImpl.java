@@ -1,12 +1,12 @@
 package run.aquan.iron.security.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.model.entity.SysUser;
-import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.service.SysUserService;
 
 /**
@@ -19,6 +19,7 @@ import run.aquan.iron.system.service.SysUserService;
 @Service
 public class SysUserDetailsServiceImpl implements UserDetailsService {
 
+    @Autowired
     private final SysUserService sysUserService;
 
     public SysUserDetailsServiceImpl(SysUserService sysUserService) {
