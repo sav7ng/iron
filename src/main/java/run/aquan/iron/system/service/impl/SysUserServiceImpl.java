@@ -1,6 +1,7 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,13 +30,14 @@ import java.util.Optional;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    private final SysUserRepository sysUserRepository;
-
+    @Autowired
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public SysUserServiceImpl(SysUserRepository sysUserRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.sysUserRepository = sysUserRepository;
+    private final SysUserRepository sysUserRepository;
+
+    public SysUserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, SysUserRepository sysUserRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.sysUserRepository = sysUserRepository;
     }
 
     @Override
