@@ -19,10 +19,7 @@ public class ResultResponse {
     }
 
     public static <T> Result<T> genSuccessResult(T data) {
-        return new Result()
-                .setCode(ResultCode.SUCCESS)
-                .setMessage(DEFAULT_SUCCESS_MESSAGE)
-                .setData(data);
+        return genSuccessResult().setData(data);
     }
 
     public static Result genFailResult(String message) {
