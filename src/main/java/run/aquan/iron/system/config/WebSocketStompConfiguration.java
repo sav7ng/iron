@@ -32,7 +32,7 @@ public class WebSocketStompConfiguration implements WebSocketMessageBrokerConfig
                 //.addInterceptors() 拦截处理，和http拦截类似
                 .setAllowedOrigins("*") //跨域
                 .withSockJS() //使用sockJS
-                .setClientLibraryUrl( "https://cdn.jsdelivr.net/sockjs/1.4.0/sockjs.min.js" );
+                .setClientLibraryUrl("https://cdn.bootcss.com/sockjs-client/1.4.0/sockjs.min.js");
     }
 
     /**
