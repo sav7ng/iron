@@ -31,12 +31,11 @@ import java.util.Optional;
 public class SysUserServiceImpl implements SysUserService {
 
     @Autowired
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final SysUserRepository sysUserRepository;
 
-    public SysUserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, SysUserRepository sysUserRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public SysUserServiceImpl(SysUserRepository sysUserRepository) {
         this.sysUserRepository = sysUserRepository;
     }
 

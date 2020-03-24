@@ -19,7 +19,6 @@ import run.aquan.iron.system.service.SysUserService;
 @Service
 public class SysUserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
     private final SysUserService sysUserService;
 
     public SysUserDetailsServiceImpl(SysUserService sysUserService) {

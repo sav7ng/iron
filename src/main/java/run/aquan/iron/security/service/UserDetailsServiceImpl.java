@@ -19,7 +19,6 @@ import run.aquan.iron.system.service.UserService;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
     private final UserService userService;
 
     public UserDetailsServiceImpl(UserService userService) {
