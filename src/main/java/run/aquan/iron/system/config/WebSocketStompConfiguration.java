@@ -31,7 +31,8 @@ public class WebSocketStompConfiguration implements WebSocketMessageBrokerConfig
                 //.setHandshakeHandler() 握手处理，主要是连接的时候认证获取其他数据验证等
                 //.addInterceptors() 拦截处理，和http拦截类似
                 .setAllowedOrigins("*") //跨域
-                .withSockJS(); //使用sockJS
+                .withSockJS() //使用sockJS
+                .setClientLibraryUrl( "https://cdn.jsdelivr.net/sockjs/1.4.0/sockjs.min.js" );
     }
 
     /**
