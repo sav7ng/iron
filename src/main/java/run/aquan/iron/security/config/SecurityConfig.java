@@ -18,6 +18,8 @@ import run.aquan.iron.security.filter.JWTAuthenticationFilter;
 import run.aquan.iron.security.filter.JWTAuthorizationFilter;
 import run.aquan.iron.security.service.UserDetailsServiceImpl;
 
+import javax.annotation.Resource;
+
 /**
  * @Class SecurityConfig
  * @Description TODO
@@ -29,7 +31,7 @@ import run.aquan.iron.security.service.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+    @Resource
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
     /**

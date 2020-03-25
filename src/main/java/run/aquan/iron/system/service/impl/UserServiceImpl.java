@@ -1,7 +1,6 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +20,7 @@ import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.repository.UserRepository;
 import run.aquan.iron.system.service.UserService;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Autowired
+    @Resource
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final UserRepository userRepository;

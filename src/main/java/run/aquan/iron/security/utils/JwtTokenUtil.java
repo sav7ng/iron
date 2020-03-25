@@ -5,7 +5,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
@@ -40,11 +39,14 @@ public class JwtTokenUtil {
     private static byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
     private static SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SysUserService sysUserService;
+    private final SysUserService sysUserService;
+
+    public JwtTokenUtil(UserService userService, SysUserService sysUserService) {
+        this.userService = userService;
+        this.sysUserService = sysUserService;
+    }
 
     public static JwtTokenUtil jwtTokenUtil;
 

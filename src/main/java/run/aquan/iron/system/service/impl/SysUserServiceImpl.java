@@ -1,7 +1,6 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,6 +15,7 @@ import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Optional;
 
@@ -30,7 +30,7 @@ import java.util.Optional;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    @Autowired
+    @Resource
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final SysUserRepository sysUserRepository;
