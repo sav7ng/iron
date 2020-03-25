@@ -15,6 +15,7 @@ import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.exception.UserNameAlreadyExistException;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.repository.UserRepository;
@@ -67,6 +68,22 @@ public class UserServiceImpl implements UserService {
             user.setExpirationTime(new Date());
             userRepository.saveAndFlush(user);
             return ResultResponse.genSuccessResult("成功退出");
+        } catch (UsernameNotFoundException e) {
+            log.error(e.getMessage());
+            return ResultResponse.genFailResult(e.getMessage());
+        }
+    }
+
+    @Override
+    public Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser) {
+        if (!bCryptPasswordEncoder.matches(changePasswordParam.getPassword(), currentUser.getPassword()))
+            return ResultResponse.genFailResult("原密码错误");
+        try {
+            String newPassword = bCryptPasswordEncoder.encode(changePasswordParam.getNewPassword());
+            User user = userRepository.findByUsernameAndDatalevel(currentUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentUser.getUsername()));
+            user.setPassword(newPassword);
+            userRepository.saveAndFlush(user);
+            return ResultResponse.genSuccessResult("修改成功");
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
             return ResultResponse.genFailResult(e.getMessage());

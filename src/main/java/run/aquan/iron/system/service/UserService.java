@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 
@@ -21,4 +22,6 @@ public interface UserService {
     Page<User> pageBy(Pageable pageable);
 
     Result logout(JwtUser currentUser);
+
+    Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser);
 }

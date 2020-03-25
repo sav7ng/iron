@@ -14,6 +14,7 @@ import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
@@ -30,13 +31,13 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 @RequestMapping("/api/content/users")
 public class UserController {
 
-    private final UserService userService;
-
     private final CurrentUser currentUser;
 
-    public UserController(UserService userService, CurrentUser currentUser) {
-        this.userService = userService;
+    private final UserService userService;
+
+    public UserController(CurrentUser currentUser, UserService userService) {
         this.currentUser = currentUser;
+        this.userService = userService;
     }
 
     @PostMapping("login")
@@ -66,7 +67,6 @@ public class UserController {
         return ResultResponse.genSuccessResult(result + "[" + date + "]");
     }
 
-
     @GetMapping("pageBy")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     public Result pageBy(@PageableDefault(sort = "updateTime", direction = DESC) Pageable pageable) {
@@ -79,6 +79,12 @@ public class UserController {
     public Result getById(@RequestParam(value = "id") Integer id) {
         User user = userService.getById(id);
         return ResultResponse.genSuccessResult(user);
+    }
+
+    @PostMapping("changePassword")
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    public Result changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
+        return userService.changePassword(changePasswordParam, this.currentUser.getCurrentUser());
     }
 
 }
