@@ -8,6 +8,8 @@ import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.service.SysUserService;
 
+import javax.annotation.Resource;
+
 /**
  * @Class SysUserDetailsServiceImpl
  * @Description TODO
@@ -18,11 +20,8 @@ import run.aquan.iron.system.service.SysUserService;
 @Service
 public class SysUserDetailsServiceImpl implements UserDetailsService {
 
-    private final SysUserService sysUserService;
-
-    public SysUserDetailsServiceImpl(SysUserService sysUserService) {
-        this.sysUserService = sysUserService;
-    }
+    @Resource
+    private SysUserService sysUserService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
