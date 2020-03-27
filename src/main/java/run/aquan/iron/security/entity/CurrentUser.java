@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import run.aquan.iron.security.service.SysUserDetailsServiceImpl;
 import run.aquan.iron.security.service.UserDetailsServiceImpl;
 
+import javax.annotation.Resource;
+
 /**
  * @Class CurrentUser
  * @Description TODO 获取当前请求的用户
@@ -16,14 +18,11 @@ import run.aquan.iron.security.service.UserDetailsServiceImpl;
 @Component
 public class CurrentUser {
 
-    private final UserDetailsServiceImpl userDetailsService;
+    @Resource
+    private UserDetailsServiceImpl userDetailsService;
 
-    private final SysUserDetailsServiceImpl sysUserDetailsService;
-
-    public CurrentUser(UserDetailsServiceImpl userDetailsService, SysUserDetailsServiceImpl sysUserDetailsService) {
-        this.userDetailsService = userDetailsService;
-        this.sysUserDetailsService = sysUserDetailsService;
-    }
+    @Resource
+    private SysUserDetailsServiceImpl sysUserDetailsService;
 
     public JwtUser getCurrentUser() {
         return (JwtUser) userDetailsService.loadUserByUsername(getCurrentUserName());
