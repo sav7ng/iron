@@ -1,6 +1,7 @@
 package run.aquan.iron.system.controller.admin;
 
 import cn.hutool.core.date.DateUtil;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.constants.SecurityConstant;
@@ -9,6 +10,7 @@ import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.core.ResultResponse;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.service.SysUserService;
 
@@ -56,4 +58,9 @@ public class SysUserController {
         return ResultResponse.genSuccessResult(result + "[" + date + "]");
     }
 
+    @PostMapping("changePassword")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public Result changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
+        return sysUserService.changePassword(changePasswordParam, this.currentUser.getCurrentSysUser());
+    }
 }

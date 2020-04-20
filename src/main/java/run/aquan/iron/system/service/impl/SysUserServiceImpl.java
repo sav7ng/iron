@@ -11,6 +11,7 @@ import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.SysUser;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
@@ -93,6 +94,23 @@ public class SysUserServiceImpl implements SysUserService {
             sysUser.setExpirationTime(new Date());
             sysUserRepository.saveAndFlush(sysUser);
             return ResultResponse.genSuccessResult("成功退出");
+        } catch (UsernameNotFoundException e) {
+            log.error(e.getMessage());
+            return ResultResponse.genFailResult(e.getMessage());
+        }
+    }
+
+    @Override
+    public Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentSysUser) {
+        if (!bCryptPasswordEncoder.matches(changePasswordParam.getPassword(), currentSysUser.getPassword())) {
+            return ResultResponse.genFailResult("原密码错误");
+        }
+        try {
+            String newPassword = bCryptPasswordEncoder.encode(changePasswordParam.getNewPassword());
+            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(currentSysUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentSysUser.getUsername()));
+            sysUser.setPassword(newPassword);
+            sysUserRepository.saveAndFlush(sysUser);
+            return ResultResponse.genSuccessResult("修改成功");
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
             return ResultResponse.genFailResult(e.getMessage());

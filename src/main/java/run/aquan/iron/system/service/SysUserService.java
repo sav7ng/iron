@@ -3,6 +3,7 @@ package run.aquan.iron.system.service;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.core.Result;
 import run.aquan.iron.system.model.entity.SysUser;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 
 public interface SysUserService {
@@ -14,4 +15,7 @@ public interface SysUserService {
     Result login(LoginParam loginParam);
 
     Result logout(JwtUser currentSysUser);
+
+    Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentSysUser);
+
 }
