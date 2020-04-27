@@ -12,13 +12,13 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-    Optional<User> findByUsernameAndDatalevel(String username, Datalevel datalevel);
+    Optional<User> findByUsernameAndDatalevel(@NonNull String username, @NonNull Datalevel datalevel);
 
     @Transactional
-    void deleteByUsername(String username);
+    void deleteByUsername(@NonNull String username);
 
     @Override
-    Optional<User> findById(Integer id);
+    Optional<User> findById(@NonNull Integer id);
 
     Page<User> findAllByDatalevel(@NonNull Datalevel datalevel, @NonNull Pageable pageable);
 
