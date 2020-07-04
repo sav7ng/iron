@@ -3,24 +3,18 @@
  */
 
 plugins {
+    id "org.springframework.boot" version "2.2.6.RELEASE"
+    id "io.spring.dependency-management" version "1.0.9.RELEASE"
     id 'java'
     id 'maven-publish'
-    id "io.freefair.lombok" version "5.1.0"
 }
 
 repositories {
-    mavenLocal()
+    maven {
+        url "https://maven.aliyun.com/nexus/content/groups/public"
+    }
     mavenCentral()
     jcenter()
-    maven {
-        url = uri('http://maven.aliyun.com/nexus/content/groups/public/')
-    }
-    maven {
-        url = uri('http://repo.maven.apache.org/maven2')
-    }
-    maven {
-        url "https://plugins.gradle.org/m2/"
-    }
 }
 
 dependencies {
@@ -45,17 +39,14 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.10.7'
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.10.7'
     testImplementation 'org.springframework.boot:spring-boot-starter-test:2.1.8.RELEASE'
-
     compileOnly 'org.projectlombok:lombok:1.18.12'
     annotationProcessor 'org.projectlombok:lombok:1.18.12'
-
     testCompileOnly 'org.projectlombok:lombok:1.18.12'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.12'
-
 }
 
 group = 'run.aquan'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.1'
 description = 'iron'
 sourceCompatibility = '1.8'
 
@@ -67,7 +58,11 @@ publishing {
     }
 }
 
+java {
+    archivesBaseName = "iron"
+    sourceCompatibility = JavaVersion.VERSION_1_8
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
-

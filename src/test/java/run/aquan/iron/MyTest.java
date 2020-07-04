@@ -69,20 +69,20 @@ public class MyTest {
 
     }
 
-    @Test
-    public void hmacSha256() throws Exception {
-        String data = "";
-        String key = "";
-        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
-        sha256_HMAC.init(secret_key);
-        byte[] array = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        for (byte item : array) {
-            sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
-        }
-        log.warn(sb.toString().toUpperCase());
-    }
+    // @Test
+    // public void hmacSha256() throws Exception {
+    //     String data = "";
+    //     String key = "";
+    //     Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+    //     SecretKeySpec secret_key = new SecretKeySpec(key.getBytes("UTF-8"), "HmacSHA256");
+    //     sha256_HMAC.init(secret_key);
+    //     byte[] array = sha256_HMAC.doFinal(data.getBytes("UTF-8"));
+    //     StringBuilder sb = new StringBuilder();
+    //     for (byte item : array) {
+    //         sb.append(Integer.toHexString((item & 0xFF) | 0x100).substring(1, 3));
+    //     }
+    //     log.warn(sb.toString().toUpperCase());
+    // }
 
     @Test
     public void bcryptPassword() {
@@ -96,19 +96,19 @@ public class MyTest {
         System.out.println("第二次加密密文是否验证通过: " + encoder.matches(password, encode1));
     }
 
-    @Test
-    public void tokenGetBoby() {
-        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
-        SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzMzODUxMywic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3OTQzMzEzfQ.LBp7T28uWf2IoJI8qPg7TQeuJDP1iFxR4hJh6uDn6xQ";
-        Claims body = Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-        Date date = DateUtil.parse(body.getExpiration().toString());
-        String formatDateTime = DateUtil.formatDateTime(date);
-        log.warn(formatDateTime);
-    }
+    // @Test
+    // public void tokenGetBoby() {
+    //     byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
+    //     SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
+    //     String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzMzODUxMywic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3OTQzMzEzfQ.LBp7T28uWf2IoJI8qPg7TQeuJDP1iFxR4hJh6uDn6xQ";
+    //     Claims body = Jwts.parser()
+    //             .setSigningKey(secretKey)
+    //             .parseClaimsJws(token)
+    //             .getBody();
+    //     Date date = DateUtil.parse(body.getExpiration().toString());
+    //     String formatDateTime = DateUtil.formatDateTime(date);
+    //     log.warn(formatDateTime);
+    // }
 
 
 }
