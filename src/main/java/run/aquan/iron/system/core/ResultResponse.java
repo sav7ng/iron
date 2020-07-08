@@ -12,14 +12,21 @@ import run.aquan.iron.system.enums.ResultCode;
 public class ResultResponse {
     private static final String DEFAULT_SUCCESS_MESSAGE = "SUCCESS";
 
-    public static Result genSuccessResult() {
-        return new Result()
+    private ResultResponse() {
+        throw new IllegalStateException("ResultResponse class");
+    }
+
+    public static Result  genSuccessResult() {
+        return new Result<>()
                 .setCode(ResultCode.SUCCESS)
                 .setMessage(DEFAULT_SUCCESS_MESSAGE);
     }
 
     public static <T> Result<T> genSuccessResult(T data) {
-        return genSuccessResult().setData(data);
+        return new Result<T>()
+                .setCode(ResultCode.SUCCESS)
+                .setMessage(DEFAULT_SUCCESS_MESSAGE)
+                .setData(data);
     }
 
     public static Result genFailResult(String message) {
