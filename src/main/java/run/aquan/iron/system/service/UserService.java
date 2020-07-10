@@ -3,7 +3,7 @@ package run.aquan.iron.system.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.system.core.Result;
+import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
@@ -11,17 +11,17 @@ import run.aquan.iron.system.model.params.RegisterUserParam;
 
 public interface UserService {
 
-    Result login(LoginParam loginParam);
+    AuthToken login(LoginParam loginParam);
 
     User findUserByUserName(String username);
 
-    Result saveUser(RegisterUserParam registerUserParam);
+    User saveUser(RegisterUserParam registerUserParam);
 
     User getById(Integer id);
 
     Page<User> pageBy(Pageable pageable);
 
-    Result logout(JwtUser currentUser);
+    String logout(JwtUser currentUser);
 
-    Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser);
+    String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser);
 }
