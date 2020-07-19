@@ -5,8 +5,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
+import run.aquan.iron.system.enums.Datalevel;
+import run.aquan.iron.system.exception.IronException;
+import run.aquan.iron.system.mapper.SysUserMapper;
 import run.aquan.iron.system.model.entity.SysUser;
-import run.aquan.iron.system.service.SysUserService;
 
 import javax.annotation.Resource;
 
@@ -21,11 +23,11 @@ import javax.annotation.Resource;
 public class SysUserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private SysUserService sysUserService;
+    private SysUserMapper sysUserMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        SysUser sysUser = sysUserService.findUserByUserName(username);
+        SysUser sysUser = sysUserMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new IronException("No user found"));
         return new JwtUser(sysUser);
     }
 

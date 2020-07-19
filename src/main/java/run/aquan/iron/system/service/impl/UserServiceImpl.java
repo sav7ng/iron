@@ -2,8 +2,6 @@ package run.aquan.iron.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,6 @@ import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
-import run.aquan.iron.system.repository.UserRepository;
 import run.aquan.iron.system.service.UserService;
 
 import javax.annotation.Resource;
@@ -35,12 +32,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final UserRepository userRepository;
-
     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
-        this.userRepository = userRepository;
+    public UserServiceImpl(UserMapper userMapper) {
         this.userMapper = userMapper;
     }
 
@@ -48,12 +42,12 @@ public class UserServiceImpl implements UserService {
     public AuthToken login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
-            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            User user = userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             if (bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword())) {
                 synchronized (this) {
                     AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
                     user.setExpirationTime(authToken.getExpiration());
-                    userRepository.saveAndFlush(user);
+                    userMapper.updateById(user);
                     return authToken;
                 }
             } else {
@@ -69,9 +63,9 @@ public class UserServiceImpl implements UserService {
     public String logout(JwtUser currentUser) {
         String username = currentUser.getUsername();
         try {
-            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            User user = userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             user.setExpirationTime(new Date());
-            userRepository.saveAndFlush(user);
+            userMapper.updateById(user);
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -85,9 +79,9 @@ public class UserServiceImpl implements UserService {
             throw new IronException("原密码错误");
         try {
             String newPassword = bCryptPasswordEncoder.encode(changePasswordParam.getNewPassword());
-            User user = userRepository.findByUsernameAndDatalevel(currentUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentUser.getUsername()));
+            User user = userMapper.findByUsernameAndDatalevel(currentUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentUser.getUsername()));
             user.setPassword(newPassword);
-            userRepository.saveAndFlush(user);
+            userMapper.updateById(user);
             return "修改成功";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -98,8 +92,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findUserByUserName(String username) {
         try {
-            User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
-            return user;
+            return userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
             throw new IronException(e.getMessage());
@@ -107,8 +100,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(RegisterUserParam registerUserParam) {
-        Optional<User> optionalUser = userRepository.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
+    public Integer saveUser(RegisterUserParam registerUserParam) {
+            Optional<User> optionalUser = userMapper.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
         try {
             if (optionalUser.isPresent())
                 throw new UserNameAlreadyExistException("User name already exist!Please choose another user name.");
@@ -117,8 +110,7 @@ public class UserServiceImpl implements UserService {
                     .password(bCryptPasswordEncoder.encode(registerUserParam.getPassword()))
                     .roles("USER")
                     .build();
-            User save = userRepository.save(user);
-            return save;
+            return userMapper.insert(user);
         } catch (UserNameAlreadyExistException e) {
             log.error(e.getMessage());
             throw new IronException(e.getMessage());
@@ -127,14 +119,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getById(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("No user found with Id " + id));
-        return user;
-    }
-
-    @Override
-    public Page<User> pageBy(Pageable pageable) {
-        Page<User> users = userRepository.findAllByDatalevel(Datalevel.EFFECTIVE, pageable);
-        return users;
+        return userMapper.selectById(id);
     }
 
     @Override

@@ -10,6 +10,7 @@ import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
+import run.aquan.iron.system.model.support.BaseResponse;
 import run.aquan.iron.system.service.SysUserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -41,24 +42,22 @@ public class SysUserController {
     }
 
     @PostMapping("logout")
-    public String logout() {
-        JwtUser currentSysUser = currentUser.getCurrentSysUser();
-        return sysUserService.logout(currentSysUser);
+    public BaseResponse<String> logout() {
+        return BaseResponse.ok(sysUserService.logout(currentUser.getCurrentSysUser()));
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public String getByToken(HttpServletRequest request) {
+    public BaseResponse<String> getByToken(HttpServletRequest request) {
         String authorization = request.getHeader(SecurityConstant.ADMIN_TOKEN_HEADER);
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         String date = DateUtil.formatDateTime(JwtTokenUtil.getTokenExpiration(token));
-        String result = "当前访问该接口的用户为：" + currentUser.getCurrentSysUser().toString() + "[" + date + "]";
-        return result;
+        return BaseResponse.ok("当前访问该接口的用户为：" + currentUser.getCurrentUser().toString() + "[" + date + "]");
     }
 
     @PostMapping("changePassword")
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public String changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
-        return sysUserService.changePassword(changePasswordParam, this.currentUser.getCurrentSysUser());
+    public BaseResponse<String> changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
+        return BaseResponse.ok(sysUserService.changePassword(changePasswordParam, this.currentUser.getCurrentSysUser()));
     }
 }

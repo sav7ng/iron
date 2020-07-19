@@ -8,11 +8,11 @@ import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.exception.IronException;
+import run.aquan.iron.system.mapper.SysUserMapper;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
-import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
 
 import javax.annotation.Resource;
@@ -33,21 +33,21 @@ public class SysUserServiceImpl implements SysUserService {
     @Resource
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final SysUserRepository sysUserRepository;
+    private final SysUserMapper sysUserMapper;
 
-    public SysUserServiceImpl(SysUserRepository sysUserRepository) {
-        this.sysUserRepository = sysUserRepository;
+    public SysUserServiceImpl(SysUserMapper sysUserMapper) {
+        this.sysUserMapper = sysUserMapper;
     }
 
     @Override
     public String init() {
         // 防止重复初始化
-        Optional<SysUser> admin = sysUserRepository.findByUsernameAndDatalevel("admin", Datalevel.EFFECTIVE);
+        Optional<SysUser> admin = sysUserMapper.findByUsernameAndDatalevel("admin", Datalevel.EFFECTIVE);
         if (admin.isPresent())
             return "No need to repeat initialization";
         SysUser sysUser = SysUser.builder().username("admin").password(bCryptPasswordEncoder.encode("aquan")).roles("ADMIN").build();
         try {
-            sysUserRepository.save(sysUser);
+            sysUserMapper.updateById(sysUser);
             return "initialized successfully";
         } catch (Exception e) {
             log.error(e.getMessage());
@@ -58,7 +58,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser findUserByUserName(String username) {
         try {
-            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            SysUser sysUser = sysUserMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             return sysUser;
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -70,13 +70,13 @@ public class SysUserServiceImpl implements SysUserService {
     public AuthToken login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
-            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            SysUser sysUser = sysUserMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             if (!bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword()))
                 throw new IronException("Admin Password erro");
             synchronized (this) {
                 AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
                 sysUser.setExpirationTime(authToken.getExpiration());
-                sysUserRepository.saveAndFlush(sysUser);
+                sysUserMapper.updateById(sysUser);
                 return authToken;
             }
         } catch (UsernameNotFoundException e) {
@@ -89,9 +89,9 @@ public class SysUserServiceImpl implements SysUserService {
     public String logout(JwtUser currentSysUser) {
         String username = currentSysUser.getUsername();
         try {
-            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            SysUser sysUser = sysUserMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             sysUser.setExpirationTime(new Date());
-            sysUserRepository.saveAndFlush(sysUser);
+            sysUserMapper.updateById(sysUser);
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -106,9 +106,9 @@ public class SysUserServiceImpl implements SysUserService {
         }
         try {
             String newPassword = bCryptPasswordEncoder.encode(changePasswordParam.getNewPassword());
-            SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(currentSysUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentSysUser.getUsername()));
+            SysUser sysUser = sysUserMapper.findByUsernameAndDatalevel(currentSysUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentSysUser.getUsername()));
             sysUser.setPassword(newPassword);
-            sysUserRepository.saveAndFlush(sysUser);
+            sysUserMapper.updateById(sysUser);
             return "修改成功";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());

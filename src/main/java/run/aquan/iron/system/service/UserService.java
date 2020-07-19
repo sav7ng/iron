@@ -1,7 +1,5 @@
 package run.aquan.iron.system.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.User;
@@ -17,11 +15,9 @@ public interface UserService {
 
     User findUserByUserName(String username);
 
-    User saveUser(RegisterUserParam registerUserParam);
+    Integer saveUser(RegisterUserParam registerUserParam);
 
     User getById(Integer id);
-
-    Page<User> pageBy(Pageable pageable);
 
     String logout(JwtUser currentUser);
 
