@@ -24,3 +24,7 @@ spring:
 
 iron:
   baseUrl: http://localhost:${server.port}${server.servlet.context-path}
+
+mybatis-plus:
+  # 支持统配符 * 或者 ; 分割
+  typeEnumsPackage: run.aquan.iron.system.enums

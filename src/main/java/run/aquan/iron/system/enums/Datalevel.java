@@ -1,5 +1,8 @@
 package run.aquan.iron.system.enums;
 
+import com.baomidou.mybatisplus.annotation.EnumValue;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * @Author Aquan
  * @Description //TODO 数据级别枚举
@@ -19,6 +22,8 @@ public enum Datalevel implements ValueEnum<Integer> {
      **/
     EFFECTIVE(1);
 
+    @EnumValue
+    @JsonValue
     private final int value;
 
     Datalevel(int value) {

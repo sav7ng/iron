@@ -1,5 +1,6 @@
 package run.aquan.iron.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
-import run.aquan.iron.system.core.Result;
-import run.aquan.iron.system.core.ResultResponse;
 import run.aquan.iron.system.enums.Datalevel;
+import run.aquan.iron.system.exception.IronException;
 import run.aquan.iron.system.exception.UserNameAlreadyExistException;
+import run.aquan.iron.system.mapper.UserMapper;
 import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
@@ -23,6 +24,7 @@ import run.aquan.iron.system.service.UserService;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -35,12 +37,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final UserMapper userMapper;
+
+    public UserServiceImpl(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public Result login(LoginParam loginParam) {
+    public AuthToken login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
             User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
@@ -49,44 +54,44 @@ public class UserServiceImpl implements UserService {
                     AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
                     user.setExpirationTime(authToken.getExpiration());
                     userRepository.saveAndFlush(user);
-                    return ResultResponse.genSuccessResult(authToken);
+                    return authToken;
                 }
             } else {
-                return ResultResponse.genFailResult("User Password erro");
+                throw new IronException("User Password erro");
             }
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
-            return ResultResponse.genFailResult("No user found with username " + username);
+            throw new IronException("No user found with username " + username);
         }
     }
 
     @Override
-    public Result logout(JwtUser currentUser) {
+    public String logout(JwtUser currentUser) {
         String username = currentUser.getUsername();
         try {
             User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             user.setExpirationTime(new Date());
             userRepository.saveAndFlush(user);
-            return ResultResponse.genSuccessResult("成功退出");
+            return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
-            return ResultResponse.genFailResult(e.getMessage());
+            throw new IronException(e.getMessage());
         }
     }
 
     @Override
-    public Result changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser) {
+    public String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser) {
         if (!bCryptPasswordEncoder.matches(changePasswordParam.getPassword(), currentUser.getPassword()))
-            return ResultResponse.genFailResult("原密码错误");
+            throw new IronException("原密码错误");
         try {
             String newPassword = bCryptPasswordEncoder.encode(changePasswordParam.getNewPassword());
             User user = userRepository.findByUsernameAndDatalevel(currentUser.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + currentUser.getUsername()));
             user.setPassword(newPassword);
             userRepository.saveAndFlush(user);
-            return ResultResponse.genSuccessResult("修改成功");
+            return "修改成功";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
-            return ResultResponse.genFailResult(e.getMessage());
+            throw new IronException(e.getMessage());
         }
     }
 
@@ -97,12 +102,12 @@ public class UserServiceImpl implements UserService {
             return user;
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
-            return null;
+            throw new IronException(e.getMessage());
         }
     }
 
     @Override
-    public Result saveUser(RegisterUserParam registerUserParam) {
+    public User saveUser(RegisterUserParam registerUserParam) {
         Optional<User> optionalUser = userRepository.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
         try {
             if (optionalUser.isPresent())
@@ -113,10 +118,10 @@ public class UserServiceImpl implements UserService {
                     .roles("USER")
                     .build();
             User save = userRepository.save(user);
-            return ResultResponse.genSuccessResult(save);
+            return save;
         } catch (UserNameAlreadyExistException e) {
             log.error(e.getMessage());
-            return ResultResponse.genFailResult(e.getMessage());
+            throw new IronException(e.getMessage());
         }
     }
 
@@ -132,5 +137,11 @@ public class UserServiceImpl implements UserService {
         return users;
     }
 
+    @Override
+    public List<User> mybaisPlusGetUser() {
+        QueryWrapper<User> queryWrapper = new QueryWrapper();
+        queryWrapper.eq("datalevel", Datalevel.EFFECTIVE);
+        return userMapper.selectList(queryWrapper);
+    }
 
 }

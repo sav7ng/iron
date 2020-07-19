@@ -7,8 +7,8 @@ import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
-import run.aquan.iron.system.core.Result;
-import run.aquan.iron.system.core.ResultResponse;
+import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.service.SysUserService;
 
@@ -36,24 +36,29 @@ public class SysUserController {
     }
 
     @PostMapping("login")
-    public Result login(@Valid @RequestBody LoginParam loginParam) {
+    public AuthToken login(@Valid @RequestBody LoginParam loginParam) {
         return sysUserService.login(loginParam);
     }
 
     @PostMapping("logout")
-    public Result logout() {
+    public String logout() {
         JwtUser currentSysUser = currentUser.getCurrentSysUser();
         return sysUserService.logout(currentSysUser);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
-    public Result getByToken(HttpServletRequest request) {
+    public String getByToken(HttpServletRequest request) {
         String authorization = request.getHeader(SecurityConstant.ADMIN_TOKEN_HEADER);
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         String date = DateUtil.formatDateTime(JwtTokenUtil.getTokenExpiration(token));
-        String result = "当前访问该接口的用户为：" + currentUser.getCurrentSysUser().toString();
-        return ResultResponse.genSuccessResult(result + "[" + date + "]");
+        String result = "当前访问该接口的用户为：" + currentUser.getCurrentSysUser().toString() + "[" + date + "]";
+        return result;
     }
 
+    @PostMapping("changePassword")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public String changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
+        return sysUserService.changePassword(changePasswordParam, this.currentUser.getCurrentSysUser());
+    }
 }

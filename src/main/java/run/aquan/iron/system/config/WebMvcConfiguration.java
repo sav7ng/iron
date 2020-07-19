@@ -1,37 +1,24 @@
 package run.aquan.iron.system.config;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.serializer.SerializerFeature;
-import com.alibaba.fastjson.support.config.FastJsonConfig;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.jackson.JsonComponentModule;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.web.method.HandlerMethod;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.config.annotation.*;
-import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import run.aquan.iron.system.core.Result;
-import run.aquan.iron.system.enums.ResultCode;
-import run.aquan.iron.system.exception.ServiceException;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -50,19 +37,35 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     private String env;//当前激活的配置文件
 
     //使用阿里 FastJson 作为JSON MessageConverter
-    @Override
-    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-        FastJsonConfig config = new FastJsonConfig();
-        config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);//保留空的字段
-        //SerializerFeature.WriteNullStringAsEmpty,//String null -> ""
-        //SerializerFeature.WriteNullNumberAsZero//Number null -> 0
-        // 按需配置，更多参考FastJson文档哈
+    // @Override
+    // public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+    //     FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
+    //     FastJsonConfig config = new FastJsonConfig();
+    //     config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);//保留空的字段
+    //     //SerializerFeature.WriteNullStringAsEmpty,//String null -> ""
+    //     //SerializerFeature.WriteNullNumberAsZero//Number null -> 0
+    //     // 按需配置，更多参考FastJson文档哈
+    //
+    //     converter.setFastJsonConfig(config);
+    //     // converter.setDefaultCharset(Charset.forName("UTF-8"));
+    //     // converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
+    //     converter.setDefaultCharset(StandardCharsets.UTF_8);
+    //     converter.setSupportedMediaTypes(Collections.singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
+    //     converters.add(converter);
+    // }
 
-        converter.setFastJsonConfig(config);
-        converter.setDefaultCharset(Charset.forName("UTF-8"));
-        converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
-        converters.add(converter);
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        converters.stream()
+                .filter(c -> c instanceof MappingJackson2HttpMessageConverter)
+                .findFirst()
+                .ifPresent(converter -> {
+                    MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = (MappingJackson2HttpMessageConverter) converter;
+                    Jackson2ObjectMapperBuilder builder = Jackson2ObjectMapperBuilder.json();
+                    JsonComponentModule module = new JsonComponentModule();
+                    ObjectMapper objectMapper = builder.modules(module).build();
+                    mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper);
+                });
     }
 
 
@@ -113,17 +116,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
         super.addResourceHandlers(registry);
-    }
-
-    private void responseResult(HttpServletResponse response, Result result) {
-        response.setCharacterEncoding("UTF-8");
-        response.setHeader("Content-type", "application/json;charset=UTF-8");
-        response.setStatus(200);
-        try {
-            response.getWriter().write(JSON.toJSONString(result));
-        } catch (IOException ex) {
-            log.error(ex.getMessage());
-        }
     }
 
     /**

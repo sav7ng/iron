@@ -1,8 +1,9 @@
 package run.aquan.iron.system.service;
 
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.system.core.Result;
+import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.SysUser;
+import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 
 public interface SysUserService {
@@ -11,7 +12,10 @@ public interface SysUserService {
 
     SysUser findUserByUserName(String username);
 
-    Result login(LoginParam loginParam);
+    AuthToken login(LoginParam loginParam);
 
-    Result logout(JwtUser currentSysUser);
+    String logout(JwtUser currentSysUser);
+
+    String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentSysUser);
+
 }
