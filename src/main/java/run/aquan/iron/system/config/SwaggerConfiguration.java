@@ -59,7 +59,7 @@ public class SwaggerConfiguration {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("导购小程序API")
+                .title("IRON_API")
                 .description("Saving")
                 .termsOfServiceUrl("https://aquan.run")
                 .contact(new Contact("Aquan","https://aquan.run","853029827@qq.com"))
