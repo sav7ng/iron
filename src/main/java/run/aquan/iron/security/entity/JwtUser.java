@@ -1,11 +1,15 @@
 package run.aquan.iron.security.entity;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.entity.User;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @Class JwtUser
@@ -32,7 +36,7 @@ public class JwtUser implements UserDetails {
         id = user.getId();
         username = user.getUsername();
         password = user.getPassword();
-        authorities = user.getRoles();
+        authorities = userRoleConvert(user.getRoles());
     }
 
     /**
@@ -42,7 +46,7 @@ public class JwtUser implements UserDetails {
         id = sysUser.getId();
         username = sysUser.getUsername();
         password = sysUser.getPassword();
-        authorities = sysUser.getRoles();
+        authorities = userRoleConvert(sysUser.getRoles());
     }
 
     public Integer getId() {
@@ -92,6 +96,19 @@ public class JwtUser implements UserDetails {
                 ", password='" + password + '\'' +
                 ", authorities=" + authorities +
                 '}';
+    }
+
+    public List<SimpleGrantedAuthority> userRoleConvert(String roles) {
+        /**
+         * TODO: 只取索引第 1 到第 2 位的：
+         *  int[] a = {1, 2, 3, 4};
+         *  Arrays.stream(a, 1, 3).forEach(System.out :: println);
+         *  打印 2 ，3
+         **/
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        Arrays.stream(roles.split(",")).forEach(role ->
+                authorities.add(new SimpleGrantedAuthority("ROLE_" + role)));
+        return authorities;
     }
 
 }

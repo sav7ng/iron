@@ -63,17 +63,4 @@ public class SysUser {
     @Column(name = "datalevel", columnDefinition = "tinyint(1) default '1' comment '数据级别 0:已删除 1:未删除'")
     private Datalevel datalevel;
 
-    public List<SimpleGrantedAuthority> getRoles() {
-        /**
-         * TODO: 只取索引第 1 到第 2 位的：
-         *  int[] a = {1, 2, 3, 4};
-         *  Arrays.stream(a, 1, 3).forEach(System.out :: println);
-         *  打印 2 ，3
-         **/
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        Arrays.stream(roles.split(",")).forEach(role ->
-                authorities.add(new SimpleGrantedAuthority("ROLE_" + role)));
-        return authorities;
-    }
-
 }
