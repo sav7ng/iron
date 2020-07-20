@@ -60,11 +60,10 @@ public class JwtTokenUtil {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        long expiration = rememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
+        long expiration = Boolean.TRUE.equals(rememberMe) ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
         Long currentTimeMillis = System.currentTimeMillis() + expiration * 1000;
         String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis);
-        AuthToken authToken = AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).build();
-        return authToken;
+        return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).build();
     }
 
     public static String createToken(String username, List<String> roles, Long currentTimeMillis) {
