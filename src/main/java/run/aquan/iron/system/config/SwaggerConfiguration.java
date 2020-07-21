@@ -43,18 +43,18 @@ public class SwaggerConfiguration {
                 .securityContexts(contentSecurityContext());
     }
 
-    @Bean
-    public Docket createAdminApi() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .groupName(IronConstant.ADMIN_CONTROLLER_PACKAGE)
-                .apiInfo(apiInfo())
-                .select()
-                .apis(RequestHandlerSelectors.basePackage(IronConstant.ADMIN_CONTROLLER_PACKAGE))
-                .paths(PathSelectors.any())
-                .build()
-                .securitySchemes(adminApiKeys())
-                .securityContexts(adminSecurityContext());
-    }
+    // @Bean
+    // public Docket createAdminApi() {
+    //     return new Docket(DocumentationType.SWAGGER_2)
+    //             .groupName(IronConstant.ADMIN_CONTROLLER_PACKAGE)
+    //             .apiInfo(apiInfo())
+    //             .select()
+    //             .apis(RequestHandlerSelectors.basePackage(IronConstant.ADMIN_CONTROLLER_PACKAGE))
+    //             .paths(PathSelectors.any())
+    //             .build()
+    //             .securitySchemes(adminApiKeys())
+    //             .securityContexts(adminSecurityContext());
+    // }
 
 
     private ApiInfo apiInfo() {
@@ -67,18 +67,18 @@ public class SwaggerConfiguration {
                 .build();
     }
 
-    private List<ApiKey> adminApiKeys() {
-        return Arrays.asList(new ApiKey("Token from header", SecurityConstant.ADMIN_TOKEN_HEADER, In.HEADER.name()));
-    }
+    // private List<ApiKey> adminApiKeys() {
+    //     return Arrays.asList(new ApiKey("Token from header", SecurityConstant.ADMIN_TOKEN_HEADER, In.HEADER.name()));
+    // }
 
-    private List<SecurityContext> adminSecurityContext() {
-        return Collections.singletonList(
-                SecurityContext.builder()
-                        .securityReferences(defaultAuth())
-                        .forPaths(PathSelectors.regex("/api/admin/.*"))
-                        .build()
-        );
-    }
+    // private List<SecurityContext> adminSecurityContext() {
+    //     return Collections.singletonList(
+    //             SecurityContext.builder()
+    //                     .securityReferences(defaultAuth())
+    //                     .forPaths(PathSelectors.regex("/api/admin/.*"))
+    //                     .build()
+    //     );
+    // }
 
     private List<ApiKey> contentApiKeys() {
         return Arrays.asList(new ApiKey("Access key from header", SecurityConstant.TOKEN_HEADER, In.HEADER.name()));
@@ -93,22 +93,14 @@ public class SwaggerConfiguration {
         );
     }
 
-    private List<SecurityReference> defaultAuth() {
-        AuthorizationScope[] authorizationScopes = {new AuthorizationScope("Admin api", "Access admin api")};
-        return Arrays.asList(new SecurityReference("Token from header", authorizationScopes));
-    }
+    // private List<SecurityReference> defaultAuth() {
+    //     AuthorizationScope[] authorizationScopes = {new AuthorizationScope("Admin api", "Access admin api")};
+    //     return Arrays.asList(new SecurityReference("Token from header", authorizationScopes));
+    // }
 
     private List<SecurityReference> contentApiAuth() {
         AuthorizationScope[] authorizationScopes = {new AuthorizationScope("content api", "Access content api")};
         return Arrays.asList(new SecurityReference("Access key from header", authorizationScopes));
-    }
-
-    private AlternateTypePropertyBuilder property(Class<?> type, String name) {
-        return new AlternateTypePropertyBuilder()
-                .withName(name)
-                .withType(type)
-                .withCanRead(true)
-                .withCanWrite(true);
     }
 
 }

@@ -1,23 +1,29 @@
 package run.aquan.iron.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
+import run.aquan.iron.system.constants.IronConstant;
 import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.exception.IronException;
 import run.aquan.iron.system.exception.UserNameAlreadyExistException;
 import run.aquan.iron.system.mapper.UserMapper;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
+import run.aquan.iron.system.utils.JedisUtil;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -45,7 +51,7 @@ public class UserServiceImpl implements UserService {
             User user = userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             if (bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword())) {
                 synchronized (this) {
-                    AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user), loginParam.getRememberMe());
+                    AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user));
                     user.setExpirationTime(authToken.getExpiration());
                     userMapper.updateById(user);
                     return authToken;
@@ -66,6 +72,7 @@ public class UserServiceImpl implements UserService {
             User user = userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             user.setExpirationTime(new Date());
             userMapper.updateById(user);
+            JedisUtil.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + user.getUsername());
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
@@ -127,6 +134,28 @@ public class UserServiceImpl implements UserService {
         QueryWrapper<User> queryWrapper = new QueryWrapper();
         queryWrapper.eq("datalevel", Datalevel.EFFECTIVE);
         return userMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public AuthToken refreshToken(String refreshToken) {
+        Claims refreshTokenBody = JwtTokenUtil.getRefreshTokenBody(refreshToken);
+        Long issuedTime = refreshTokenBody.getIssuedAt().getTime();
+        String username = refreshTokenBody.getSubject();
+        String json = (String) Optional.ofNullable(JedisUtil.getObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + username)).orElseThrow(() -> new AccessDeniedException("refreshToken 无效"));
+        if (StringUtils.isBlank(json) || !json.equals(refreshToken)) {
+            throw new AccessDeniedException("refreshToken 无效");
+        }
+        User user = userMapper.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new AccessDeniedException("refreshToken 无效"));
+        Long loginTime = user.getExpirationTime().getTime() - SecurityConstant.EXPIRATION * 1000;
+        if (!issuedTime.equals(loginTime)) {
+            throw new AccessDeniedException("refreshToken 无效");
+        }
+        synchronized (this) {
+            AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user));
+            user.setExpirationTime(authToken.getExpiration());
+            userMapper.updateById(user);
+            return authToken;
+        }
     }
 
 }

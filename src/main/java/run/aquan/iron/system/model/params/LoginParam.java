@@ -26,7 +26,4 @@ public class LoginParam {
     @Size(max = 100, message = "用户密码字符长度不能超过 {max}")
     private String password;
 
-    @NotNull(message = "rememberMe不能为空")
-    private Boolean rememberMe;
-
 }

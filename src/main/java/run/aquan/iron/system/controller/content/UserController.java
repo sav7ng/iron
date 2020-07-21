@@ -1,16 +1,18 @@
 package run.aquan.iron.system.controller.content;
 
 import cn.hutool.core.date.DateUtil;
+import io.jsonwebtoken.Claims;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.CurrentUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
+import run.aquan.iron.system.model.params.RefreshTokenParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.model.support.BaseResponse;
 import run.aquan.iron.system.service.UserService;
@@ -50,6 +52,12 @@ public class UserController {
     @ApiOperation("Register User")
     public Integer register(@Valid @RequestBody RegisterUserParam registerUserParam) {
         return userService.saveUser(registerUserParam);
+    }
+
+    @PostMapping("refreshToken")
+    @ApiOperation("Refreshes Token")
+    public AuthToken refreshToken(@Valid @RequestBody RefreshTokenParam refreshTokenParam) {
+        return userService.refreshToken(refreshTokenParam.getRefreshToken());
     }
 
     @GetMapping

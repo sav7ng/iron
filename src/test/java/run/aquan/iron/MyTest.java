@@ -100,11 +100,12 @@ public class MyTest {
     public void tokenGetBoby() {
         byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
         SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJST0xFX1VTRVIiLCJpc3MiOiJBcXVhbiIsImlhdCI6MTU3NzMzODUxMywic3ViIjoic3RyaW5nIiwiZXhwIjoxNTc3OTQzMzEzfQ.LBp7T28uWf2IoJI8qPg7TQeuJDP1iFxR4hJh6uDn6xQ";
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJyb2wiOiJSZWZyZXNoVG9rZW4iLCJpc3MiOiJTYXZpbmciLCJpYXQiOjE1OTUyMzc3MzIsInN1YiI6IjEyMyIsImV4cCI6MTU5NTg0MjUzMn0.deM7WoZfcE14IcJA8mJ_4pJyshWROT7zDfDm52QoXVQ";
         Claims body = Jwts.parser()
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
+        log.warn(body.toString());
         Date date = DateUtil.parse(body.getExpiration().toString());
         String formatDateTime = DateUtil.formatDateTime(date);
         log.warn(formatDateTime);

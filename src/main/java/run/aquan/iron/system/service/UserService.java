@@ -1,7 +1,7 @@
 package run.aquan.iron.system.service;
 
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
@@ -24,4 +24,6 @@ public interface UserService {
     String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser);
 
     List<User> mybaisPlusGetUser();
+
+    AuthToken refreshToken(String refreshToken);
 }

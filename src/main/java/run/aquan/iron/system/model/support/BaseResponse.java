@@ -35,26 +35,26 @@ public class BaseResponse<T> {
     private String devMessage;
 
     /**
-     * Response data
+     * Response result
      */
-    private T data;
+    private T result;
 
-    public BaseResponse(Integer status, String message, T data) {
+    public BaseResponse(Integer status, String message, T result) {
         this.status = status;
         this.message = message;
-        this.data = data;
+        this.result = result;
     }
 
     /**
      * Creates an ok result with message and data. (Default status is 200)
      *
-     * @param data    result data
+     * @param result    result data
      * @param message result message
-     * @return ok result with message and data
+     * @return ok result with message and result
      */
     @NonNull
-    public static <T> BaseResponse<T> ok(@Nullable String message, @Nullable T data) {
-        return new BaseResponse<>(HttpStatus.OK.value(), message, data);
+    public static <T> BaseResponse<T> ok(@Nullable String message, @Nullable T result) {
+        return new BaseResponse<>(HttpStatus.OK.value(), message, result);
     }
 
     /**
@@ -71,11 +71,11 @@ public class BaseResponse<T> {
     /**
      * Creates an ok result with data only. (Default message is OK, status is 200)
      *
-     * @param data data to response
-     * @param <T>  data type
+     * @param result result to response
+     * @param <T>  result type
      * @return base response with data
      */
-    public static <T> BaseResponse<T> ok(@NonNull T data) {
-        return new BaseResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), data);
+    public static <T> BaseResponse<T> ok(@NonNull T result) {
+        return new BaseResponse<>(HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase(), result);
     }
 }

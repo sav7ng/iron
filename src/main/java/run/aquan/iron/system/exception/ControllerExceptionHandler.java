@@ -1,7 +1,10 @@
 package run.aquan.iron.system.exception;
 
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -30,7 +33,7 @@ public class ControllerExceptionHandler {
         baseResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         baseResponse.setMessage("字段验证错误，请完善后重试！");
         String defaultMessage = e.getBindingResult().getFieldError().getDefaultMessage();
-        baseResponse.setData(defaultMessage);
+        baseResponse.setResult(defaultMessage);
         return baseResponse;
     }
 
@@ -63,6 +66,26 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
         baseResponse.setStatus(status.value());
         baseResponse.setMessage(status.getReasonPhrase());
+        return baseResponse;
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public <T> BaseResponse<T> handleAccessDeniedException(AccessDeniedException e) {
+        BaseResponse<T> baseResponse = handleBaseException(e);
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        baseResponse.setStatus(status.value());
+        baseResponse.setMessage(status.getReasonPhrase());
+        return baseResponse;
+    }
+
+    @ExceptionHandler(SignatureException.class)
+    @ResponseStatus(HttpStatus.PRECONDITION_FAILED)
+    public <T> BaseResponse<T> handleSignatureException(SignatureException e) {
+        BaseResponse<T> baseResponse = handleBaseException(e);
+        HttpStatus status = HttpStatus.PRECONDITION_FAILED;
+        baseResponse.setStatus(status.value());
+        baseResponse.setMessage("签名与本地计算的签名不匹配");
         return baseResponse;
     }
 

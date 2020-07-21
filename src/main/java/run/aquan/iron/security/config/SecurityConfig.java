@@ -1,6 +1,5 @@
 package run.aquan.iron.security.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -14,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.exception.JWTAccessDeniedHandler;
 import run.aquan.iron.security.exception.JWTAuthenticationEntryPoint;
-import run.aquan.iron.security.filter.JWTAuthenticationFilter;
 import run.aquan.iron.security.filter.JWTAuthorizationFilter;
 import run.aquan.iron.security.service.UserDetailsServiceImpl;
 
@@ -61,6 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, SecurityConstant.AUTH_LOGIN_URL).permitAll()
                 .antMatchers(HttpMethod.POST, "/api/content/users/login").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/content/users/refreshToken").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/content/users/register").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/admin/users/login").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/error").permitAll()
@@ -71,7 +70,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
                 .and()
                 //添加自定义Filter
-                .addFilter(new JWTAuthenticationFilter(authenticationManager()))
+                // .addFilter(new JWTAuthenticationFilter(authenticationManager()))
                 .addFilter(new JWTAuthorizationFilter(authenticationManager()))
                 // 不需要session（不创建会话）
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()

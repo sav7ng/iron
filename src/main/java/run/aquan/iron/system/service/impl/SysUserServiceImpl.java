@@ -9,7 +9,7 @@ import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.exception.IronException;
 import run.aquan.iron.system.mapper.SysUserMapper;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
 import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
@@ -74,7 +74,7 @@ public class SysUserServiceImpl implements SysUserService {
             if (!bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword()))
                 throw new IronException("Admin Password erro");
             synchronized (this) {
-                AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
+                AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser));
                 sysUser.setExpirationTime(authToken.getExpiration());
                 sysUserMapper.updateById(sysUser);
                 return authToken;

@@ -10,12 +10,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
+import run.aquan.iron.system.constants.IronConstant;
 import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.service.SysUserService;
 import run.aquan.iron.system.service.UserService;
 import run.aquan.iron.system.utils.IronDateUtil;
+import run.aquan.iron.system.utils.JedisUtil;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -39,6 +41,9 @@ public class JwtTokenUtil {
     private static byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_SECRET_KEY);
     private static SecretKey secretKey = Keys.hmacShaKeyFor(apiKeySecretBytes);
 
+    private static byte[] apiRefreshTokenKeySecretBytes = DatatypeConverter.parseBase64Binary(SecurityConstant.JWT_REFRESHTOKEN_SECRET_KEY);
+    private static SecretKey refreshTokenSecretKey = Keys.hmacShaKeyFor(apiRefreshTokenKeySecretBytes);
+
     private final UserService userService;
 
     private final SysUserService sysUserService;
@@ -55,29 +60,42 @@ public class JwtTokenUtil {
         jwtTokenUtil = this;
     }
 
-    public static AuthToken createToken(JwtUser jwtUser, Boolean rememberMe) {
+    public static AuthToken createToken(JwtUser jwtUser) {
         List<String> roles = jwtUser.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        long expiration = rememberMe ? SecurityConstant.EXPIRATION_REMEMBER : SecurityConstant.EXPIRATION;
-        Long currentTimeMillis = System.currentTimeMillis() + expiration * 1000;
-        String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis);
-        AuthToken authToken = AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).build();
-        return authToken;
+        Long currentTimeMillis = System.currentTimeMillis() + SecurityConstant.EXPIRATION * 1000;
+        Date issuedTime = new Date();
+        String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis, issuedTime);
+        String refreshToken = JwtTokenUtil.createRefreshToken(jwtUser.getUsername(), currentTimeMillis, issuedTime);
+        JedisUtil.setObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + jwtUser.getUsername(), refreshToken, SecurityConstant.EXPIRATION_REFRESHTOKEN);
+        return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).refreshToken(refreshToken).build();
     }
 
-    public static String createToken(String username, List<String> roles, Long currentTimeMillis) {
+    public static String createToken(String username, List<String> roles, Long currentTimeMillis, Date issuedTime) {
         String tokenPrefix = Jwts.builder()
                 .setHeaderParam("typ", SecurityConstant.TOKEN_TYPE)
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .claim(SecurityConstant.ROLE_CLAIMS, String.join(",", roles))
-                .setIssuer("Aquan")
-                .setIssuedAt(new Date())
+                .setIssuer("Saving")
+                .setIssuedAt(issuedTime)
                 .setSubject(username)
                 .setExpiration(new Date(currentTimeMillis))
                 .compact();
         return SecurityConstant.TOKEN_PREFIX + tokenPrefix;
+    }
+
+    public static String createRefreshToken(String username, Long currentTimeMillis, Date issuedTime) {
+        return Jwts.builder()
+                .setHeaderParam("typ", SecurityConstant.TOKEN_TYPE)
+                .signWith(refreshTokenSecretKey, SignatureAlgorithm.HS256)
+                .claim(SecurityConstant.ROLE_CLAIMS, "RefreshToken")
+                .setIssuer("Saving")
+                .setIssuedAt(issuedTime)
+                .setSubject(username)
+                .setExpiration(new Date(currentTimeMillis))
+                .compact();
     }
 
     private boolean tokenExpired(String token) {
@@ -98,6 +116,13 @@ public class JwtTokenUtil {
         return Arrays.stream(role.split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    public static Claims getRefreshTokenBody(String refreshToken) {
+        return Jwts.parser()
+                .setSigningKey(refreshTokenSecretKey)
+                .parseClaimsJws(refreshToken)
+                .getBody();
     }
 
     private static Claims getTokenBody(String token) {

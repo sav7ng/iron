@@ -12,7 +12,7 @@ import run.aquan.iron.security.constants.SecurityConstant;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.entity.LoginUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
-import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.security.token.AuthToken;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +29,9 @@ import java.util.stream.Collectors;
  * @Version 1.0
  **/
 @Slf4j
+@Deprecated
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    private ThreadLocal<Boolean> rememberMe = new ThreadLocal<>();
     private AuthenticationManager authenticationManager;
 
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
@@ -48,7 +48,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         try {
             // 从输入流中获取到登录的信息
             LoginUser loginUser = objectMapper.readValue(request.getInputStream(), LoginUser.class);
-            rememberMe.set(loginUser.getRememberMe());
             // 这部分和attemptAuthentication方法中的源码是一样的，
             // 只不过由于这个方法源码的是把用户名和密码这些参数的名字是死的，所以我们重写了一下
             UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(
@@ -75,7 +74,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
         // 创建 Token
-        AuthToken authToken = JwtTokenUtil.createToken(jwtUser, rememberMe.get());
+        AuthToken authToken = JwtTokenUtil.createToken(jwtUser);
         // Http Response Header 中返回 Token
         response.setHeader(SecurityConstant.TOKEN_HEADER, authToken.getAccessToken());
     }
