@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import run.aquan.iron.system.service.RoleService;
 import run.aquan.iron.system.service.SysUserService;
 
 /**
@@ -28,23 +29,32 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
 
     private final SysUserService sysUserService;
 
-    public StartedListener(SysUserService sysUserService) {
+    private final RoleService roleService;
+
+    public StartedListener(SysUserService sysUserService, RoleService roleService) {
         this.sysUserService = sysUserService;
+        this.roleService = roleService;
     }
 
     @Override
     public void onApplicationEvent(ApplicationStartedEvent applicationStartedEvent) {
-        this.printStartInfo();
         this.initAdmin();
+        this.initRole();
+        this.printStartInfo();
     }
 
     private void printStartInfo() {
-            log.debug("Iron doc was enable at  {}/swagger-ui.html", baseUrl);
+            log.debug("Iron doc was enable at {}/swagger-ui.html", baseUrl);
     }
 
     private void initAdmin() {
         String init = sysUserService.init();
         log.info("Admin Whether initialization was successful:" + init);
+    }
+
+    private void initRole() {
+        String init = roleService.init();
+        log.info("User Role Whether initialization was successful:" + init);
     }
 
 }

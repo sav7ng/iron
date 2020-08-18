@@ -1,5 +1,6 @@
 package run.aquan.iron.system.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,13 +9,12 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import run.aquan.iron.system.enums.Datalevel;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Class User
@@ -31,12 +31,12 @@ import java.util.List;
 @DynamicUpdate
 @Entity(name = "User")
 @Table(name = "user")
-public class User {
+public class User extends AbstractAuditBase {
 
     @Id
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(name = "id", columnDefinition = "varchar(36) NOT NULL comment 'ID'")
+    @Column(name = "id", columnDefinition = "varchar(36) NOT NULL comment 'USER_ID'")
     private String id;
 
     @Column(name = "username", columnDefinition = "varchar(100) not null comment '用户名'")
@@ -48,25 +48,31 @@ public class User {
     @Column(name = "nick_name", columnDefinition = "varchar(200) comment '昵称'")
     private String nickName;
 
-    @Column(name = "roles", columnDefinition = "varchar(200) comment '权限'")
-    private String roles;
-
     @Column(name = "sex", columnDefinition = "tinyint(1) default '0' comment '性别 0:保密 1:男 2:女'")
     private Integer sex;
 
-    @Column(name = "create_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
-
-    @Column(name = "update_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
+    @Column(name = "enabled", columnDefinition = "tinyint(1) default 1 comment '是否启用 0:禁用 1:启用'")
+    private Boolean enabled;
 
     @Column(name = "expiration_time", columnDefinition = "timestamp comment 'token过期时间'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
 
-    @Column(name = "datalevel", columnDefinition = "tinyint(1) default '1' comment '数据级别 0:已删除 1:未删除'")
-    private Datalevel datalevel;
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<UserRole> userRoles = new ArrayList<>();
+
+    public List<SimpleGrantedAuthority> getRoles() {
+        /**
+         * TODO: 只取索引第 1 到第 2 位的：
+         *  int[] a = {1, 2, 3, 4};
+         *  Arrays.stream(a, 1, 3).forEach(System.out :: println);
+         *  打印 2 ，3
+         **/
+        List<Role> roles = userRoles.stream().map(UserRole::getRole).collect(Collectors.toList());
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+        roles.forEach(role -> authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getName())));
+        return authorities;
+    }
 
 }

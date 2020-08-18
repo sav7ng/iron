@@ -3,6 +3,7 @@ package run.aquan.iron.system.service.impl;
 import io.jsonwebtoken.Claims;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
@@ -15,18 +16,22 @@ import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
 import run.aquan.iron.system.constants.IronConstant;
 import run.aquan.iron.system.enums.Datalevel;
+import run.aquan.iron.system.enums.RoleType;
 import run.aquan.iron.system.exception.IronException;
 import run.aquan.iron.system.exception.UserNameAlreadyExistException;
 import run.aquan.iron.system.model.dto.AuthToken;
+import run.aquan.iron.system.model.entity.Role;
 import run.aquan.iron.system.model.entity.User;
+import run.aquan.iron.system.model.entity.UserRole;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
+import run.aquan.iron.system.repository.RoleRepository;
 import run.aquan.iron.system.repository.UserRepository;
+import run.aquan.iron.system.repository.UserRoleRepository;
 import run.aquan.iron.system.service.UserService;
 import run.aquan.iron.system.utils.JedisUtil;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Optional;
 
@@ -35,16 +40,24 @@ import java.util.Optional;
 @Transactional
 public class UserServiceImpl implements UserService {
 
-    @Resource
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final UserRepository userRepository;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    private final RoleRepository roleRepository;
+
+    private final UserRoleRepository userRoleRepository;
+
+    @Autowired
+    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AuthToken login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
@@ -138,10 +151,11 @@ public class UserServiceImpl implements UserService {
             User user = User.builder()
                     .username(registerUserParam.getUsername())
                     .password(bCryptPasswordEncoder.encode(registerUserParam.getPassword()))
-                    .roles("USER")
                     .build();
             User save = userRepository.save(user);
-            return save;
+            Role role = roleRepository.findByName(RoleType.USER.getName()).orElseThrow(() -> new IronException("could not find it"));
+            userRoleRepository.save(new UserRole(user, role));
+            return userRepository.findByUsernameAndDatalevel(save.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new IronException("System exception"));
         } catch (UserNameAlreadyExistException e) {
             log.error(e.getMessage());
             throw new IronException(e.getMessage());

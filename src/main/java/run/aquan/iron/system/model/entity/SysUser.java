@@ -7,14 +7,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import run.aquan.iron.system.enums.Datalevel;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Class SysUser
@@ -31,7 +26,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity(name = "SysUser")
 @Table(name = "sys_user")
-public class SysUser {
+public class SysUser extends AbstractAuditBase {
 
     @Id
     @GeneratedValue(generator = "uuid")
@@ -51,19 +46,8 @@ public class SysUser {
     @Column(name = "roles", columnDefinition = "varchar(200) comment '权限'")
     private String roles;
 
-    @Column(name = "create_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createTime;
-
-    @Column(name = "update_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateTime;
-
     @Column(name = "expiration_time", columnDefinition = "timestamp comment 'token过期时间'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
-
-    @Column(name = "datalevel", columnDefinition = "tinyint(1) default '1' comment '数据级别 0:已删除 1:未删除'")
-    private Datalevel datalevel;
 
 }

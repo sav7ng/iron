@@ -1,6 +1,7 @@
 package run.aquan.iron.system.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,6 @@ import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
 import run.aquan.iron.system.utils.JedisUtil;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.Optional;
 
@@ -32,12 +32,13 @@ import java.util.Optional;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    @Resource
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     private final SysUserRepository sysUserRepository;
 
-    public SysUserServiceImpl(SysUserRepository sysUserRepository) {
+    @Autowired
+    public SysUserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, SysUserRepository sysUserRepository) {
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.sysUserRepository = sysUserRepository;
     }
 
@@ -45,8 +46,9 @@ public class SysUserServiceImpl implements SysUserService {
     public String init() {
         // 防止重复初始化
         Optional<SysUser> admin = sysUserRepository.findByUsernameAndDatalevel("admin", Datalevel.EFFECTIVE);
-        if (admin.isPresent())
+        if (admin.isPresent()) {
             return "No need to repeat initialization";
+        }
         SysUser sysUser = SysUser.builder().username("admin").password(bCryptPasswordEncoder.encode("aquan")).roles("ADMIN").build();
         try {
             sysUserRepository.save(sysUser);

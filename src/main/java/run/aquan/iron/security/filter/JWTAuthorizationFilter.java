@@ -44,6 +44,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         String adminAuthorization = request.getHeader(SecurityConstant.ADMIN_TOKEN_HEADER);
         // 如果请求头中没有token信息则直接放行了
         if ((apiAuthorization == null || !apiAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX)) && (adminAuthorization == null || !adminAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX))) {
+            SecurityContextHolder.clearContext();
             chain.doFilter(request, response);
             return;
         }
@@ -53,7 +54,6 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
         // 如果请求头中有token，则进行解析，并且设置授权信息
         SecurityContextHolder.getContext().setAuthentication(authentication);
         super.doFilterInternal(request, response, chain);
-
     }
 
     /**
@@ -65,7 +65,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             Boolean check = JwtTokenUtil.checkToken(token, admin);
             if (check) {
                 String username = JwtTokenUtil.getUsernameByToken(token);
-                logger.info("checking username:" + username);
+                log.info("checking username:" + username);
                 // 通过 token 获取用户具有的角色
                 List<SimpleGrantedAuthority> userRolesByToken = JwtTokenUtil.getUserRolesByToken(token);
                 if (StringUtils.isNotBlank(username)) {
