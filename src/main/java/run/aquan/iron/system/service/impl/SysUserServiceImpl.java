@@ -6,6 +6,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import run.aquan.iron.security.entity.JwtUser;
 import run.aquan.iron.security.utils.JwtTokenUtil;
+import run.aquan.iron.system.constants.IronConstant;
 import run.aquan.iron.system.enums.Datalevel;
 import run.aquan.iron.system.exception.IronException;
 import run.aquan.iron.system.model.dto.AuthToken;
@@ -14,6 +15,7 @@ import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
+import run.aquan.iron.system.utils.JedisUtil;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -74,7 +76,7 @@ public class SysUserServiceImpl implements SysUserService {
             if (!bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword()))
                 throw new IronException("Admin Password erro");
             synchronized (this) {
-                AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser), loginParam.getRememberMe());
+                AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(sysUser));
                 sysUser.setExpirationTime(authToken.getExpiration());
                 sysUserRepository.saveAndFlush(sysUser);
                 return authToken;
@@ -92,6 +94,7 @@ public class SysUserServiceImpl implements SysUserService {
             SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             sysUser.setExpirationTime(new Date());
             sysUserRepository.saveAndFlush(sysUser);
+            JedisUtil.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + sysUser.getUsername());
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());

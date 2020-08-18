@@ -13,6 +13,8 @@ public interface UserService {
 
     AuthToken login(LoginParam loginParam);
 
+    AuthToken refreshToken(String refreshToken);
+
     User findUserByUserName(String username);
 
     User saveUser(RegisterUserParam registerUserParam);

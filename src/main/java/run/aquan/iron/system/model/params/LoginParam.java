@@ -1,11 +1,8 @@
 package run.aquan.iron.system.model.params;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -25,8 +22,5 @@ public class LoginParam {
     @NotBlank(message = "登陆密码不能为空")
     @Size(max = 100, message = "用户密码字符长度不能超过 {max}")
     private String password;
-
-    @NotNull(message = "rememberMe不能为空")
-    private Boolean rememberMe;
 
 }

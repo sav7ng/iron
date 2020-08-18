@@ -20,7 +20,7 @@ import java.util.List;
  **/
 public class JwtUser implements UserDetails {
 
-    private Integer id;
+    private String id;
     private String username;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
@@ -49,7 +49,7 @@ public class JwtUser implements UserDetails {
         authorities = userRoleConvert(sysUser.getRoles());
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 

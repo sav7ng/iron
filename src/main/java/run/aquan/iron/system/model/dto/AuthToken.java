@@ -29,4 +29,9 @@ public class AuthToken {
     @JsonProperty("expiration")
     private Date expiration;
 
+    /**
+     * Refresh token.
+     */
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 }

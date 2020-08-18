@@ -14,6 +14,7 @@ import run.aquan.iron.system.model.dto.AuthToken;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
+import run.aquan.iron.system.model.params.RefreshTokenParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
 import run.aquan.iron.system.service.UserService;
 
@@ -41,6 +42,12 @@ public class UserController {
     @PostMapping("login")
     public AuthToken login(@Valid @RequestBody LoginParam loginParam) {
         return userService.login(loginParam);
+    }
+
+    @PostMapping("refreshToken")
+    @ApiOperation("Refreshes Token")
+    public AuthToken refreshToken(@Valid @RequestBody RefreshTokenParam refreshTokenParam) {
+        return userService.refreshToken(refreshTokenParam.getRefreshToken());
     }
 
     @PostMapping("logout")
