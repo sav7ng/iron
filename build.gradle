@@ -27,7 +27,7 @@ dependencies {
     implementation 'commons-codec:commons-codec:1.11'
     implementation 'org.apache.commons:commons-lang3:3.9'
     implementation 'com.google.guava:guava:28.0-jre'
-    implementation 'com.alibaba:fastjson:1.2.58'
+    implementation 'com.alibaba:fastjson:1.2.70'
     implementation 'com.alibaba:druid-spring-boot-starter:1.1.10'
     implementation 'io.springfox:springfox-swagger2:2.9.2'
     implementation 'io.swagger:swagger-annotations:1.5.22'

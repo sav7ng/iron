@@ -16,6 +16,7 @@ import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.model.params.RefreshTokenParam;
 import run.aquan.iron.system.model.params.RegisterUserParam;
+import run.aquan.iron.system.model.support.BaseResponse;
 import run.aquan.iron.system.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 * Created by CodeGenerator on 2019/08/10.
 */
 @RestController
-@RequestMapping("/api/content/users")
+@RequestMapping("/api/content/user")
 public class UserController {
 
     private final CurrentUser currentUser;
@@ -58,12 +59,12 @@ public class UserController {
 
     @PostMapping("register")
     @ApiOperation("Register User")
-    public User register(@Valid @RequestBody RegisterUserParam registerUserParam) {
-        return userService.saveUser(registerUserParam);
+    public BaseResponse<String> register(@Valid @RequestBody RegisterUserParam registerUserParam) {
+        return BaseResponse.ok(userService.saveUser(registerUserParam));
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public String getByToken(HttpServletRequest request) {
         String authorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
@@ -74,14 +75,14 @@ public class UserController {
 
     @GetMapping("pageBy")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public Page<User> pageBy(@PageableDefault(sort = "updateTime", direction = DESC) Pageable pageable) {
+    public Page<User> pageBy(@PageableDefault(sort = "updatedTime", direction = DESC) Pageable pageable) {
         return userService.pageBy(pageable);
     }
 
     @GetMapping("getById")
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    public User getById(@RequestParam(value = "id") Integer id) {
-        return userService.getById(id);
+    public User getById(@RequestParam(value = "userId") String userId) {
+        return userService.getById(userId);
     }
 
     @PostMapping("changePassword")

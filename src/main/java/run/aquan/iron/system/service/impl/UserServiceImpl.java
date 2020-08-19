@@ -57,7 +57,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public AuthToken login(LoginParam loginParam) {
         String username = loginParam.getUsername();
         try {
@@ -83,14 +82,14 @@ public class UserServiceImpl implements UserService {
         Claims refreshTokenBody = JwtTokenUtil.getRefreshTokenBody(refreshToken);
         Long issuedTime = refreshTokenBody.getIssuedAt().getTime();
         String username = refreshTokenBody.getSubject();
-        String json = (String) Optional.ofNullable(JedisUtil.getObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + username)).orElseThrow(() -> new AccessDeniedException("refreshToken 无效"));
+        String json = (String) Optional.ofNullable(JedisUtil.getObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + username)).orElseThrow(() -> new IronException("refreshToken 无效"));
         if (StringUtils.isBlank(json) || !json.equals(refreshToken)) {
-            throw new AccessDeniedException("refreshToken 无效");
+            throw new IronException("refreshToken 无效");
         }
-        User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new AccessDeniedException("refreshToken 无效"));
+        User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new IronException("refreshToken 无效"));
         Long loginTime = user.getExpirationTime().getTime() - SecurityConstant.EXPIRATION * 1000;
         if (!issuedTime.equals(loginTime)) {
-            throw new AccessDeniedException("refreshToken 无效");
+            throw new IronException("refreshToken 无效");
         }
         synchronized (this) {
             AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user));
@@ -143,7 +142,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(RegisterUserParam registerUserParam) {
+    @Transactional(rollbackFor = Exception.class)
+    public String saveUser(RegisterUserParam registerUserParam) {
         Optional<User> optionalUser = userRepository.findByUsernameAndDatalevel(registerUserParam.getUsername(), Datalevel.EFFECTIVE);
         try {
             if (optionalUser.isPresent())
@@ -154,8 +154,8 @@ public class UserServiceImpl implements UserService {
                     .build();
             User save = userRepository.save(user);
             Role role = roleRepository.findByName(RoleType.USER.getName()).orElseThrow(() -> new IronException("could not find it"));
-            userRoleRepository.save(new UserRole(user, role));
-            return userRepository.findByUsernameAndDatalevel(save.getUsername(), Datalevel.EFFECTIVE).orElseThrow(() -> new IronException("System exception"));
+            userRoleRepository.save(new UserRole(save, role));
+            return "注册成功";
         } catch (UserNameAlreadyExistException e) {
             log.error(e.getMessage());
             throw new IronException(e.getMessage());
@@ -163,8 +163,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Integer id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("No user found with Id " + id));
+    public User getById(String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new UsernameNotFoundException("No user found with userId " + userId));
         return user;
     }
 

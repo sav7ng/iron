@@ -17,9 +17,9 @@ public interface UserService {
 
     User findUserByUserName(String username);
 
-    User saveUser(RegisterUserParam registerUserParam);
+    String saveUser(RegisterUserParam registerUserParam);
 
-    User getById(Integer id);
+    User getById(String userId);
 
     Page<User> pageBy(Pageable pageable);
 

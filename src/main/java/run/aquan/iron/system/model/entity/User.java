@@ -59,7 +59,7 @@ public class User extends AbstractAuditBase {
     private Date expirationTime;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<UserRole> userRoles = new ArrayList<>();
 
     public List<SimpleGrantedAuthority> getRoles() {

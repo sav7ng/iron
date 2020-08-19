@@ -2,6 +2,7 @@ package run.aquan.iron.system.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -21,6 +22,18 @@ import run.aquan.iron.system.utils.ExceptionUtil;
 @Slf4j
 @RestControllerAdvice({"run.aquan.iron.system.controller"})
 public class ControllerExceptionHandler {
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public BaseResponse<String> handleAccessDeniedExceptionException(AccessDeniedException e) {
+        log.error(e.getMessage());
+        BaseResponse<String> baseResponse = handleBaseException(e);
+        baseResponse.setStatus(HttpStatus.FORBIDDEN.value());
+        baseResponse.setMessage("该用户权限不足，访问被禁止！");
+        String defaultMessage = e.getLocalizedMessage();
+        baseResponse.setData(defaultMessage);
+        return baseResponse;
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

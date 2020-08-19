@@ -10,7 +10,7 @@ import run.aquan.iron.system.model.entity.User;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
+public interface UserRepository extends JpaRepository<User, String> {
 
     Optional<User> findByUsernameAndDatalevel(@NonNull String username, @NonNull Datalevel datalevel);
 
@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     void deleteByUsername(@NonNull String username);
 
     @Override
-    Optional<User> findById(@NonNull Integer id);
+    Optional<User> findById(@NonNull String id);
 
     Page<User> findAllByDatalevel(@NonNull Datalevel datalevel, @NonNull Pageable pageable);
 

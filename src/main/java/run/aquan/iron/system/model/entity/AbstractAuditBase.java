@@ -31,22 +31,22 @@ import java.time.Instant;
 public abstract class AbstractAuditBase {
 
     @CreatedDate
-    @JsonIgnore
+    // @JsonIgnore
     @Column(updatable = false, name = "created_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
     private Instant createdTime;
 
     @LastModifiedDate
-    @JsonIgnore
+    // @JsonIgnore
     @Column(name = "updated_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
     private Instant updatedTime;
 
     @CreatedBy
-    @JsonIgnore
+    // @JsonIgnore
     @Column(updatable = false, name = "created_by", columnDefinition = "varchar(255) DEFAULT NULL comment '创建者'")
     private String createdBy;
 
     @LastModifiedBy
-    @JsonIgnore
+    // @JsonIgnore
     @Column(name = "updated_by", columnDefinition = "varchar(255) DEFAULT NULL comment '创建者'")
     private String updatedBy;
 
