@@ -27,7 +27,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity(name = "Role")
 @Table(name = "role")
-public class Role extends AbstractAuditBase {
+public class Role extends AbstractBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

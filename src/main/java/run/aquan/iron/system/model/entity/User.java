@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @DynamicUpdate
 @Entity(name = "User")
 @Table(name = "user")
-public class User extends AbstractAuditBase {
+public class User extends AbstractBase {
 
     @Id
     @GeneratedValue(generator = "uuid")

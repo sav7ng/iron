@@ -25,7 +25,7 @@ import java.io.Serializable;
 @DynamicUpdate
 @Entity(name = "UserRole")
 @Table(name = "user_role")
-public class UserRole extends AbstractAuditBase implements Serializable {
+public class UserRole extends AbstractBase implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -17,7 +17,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.Instant;
 
 /**
- * @Class AbstractAuditBase
+ * @Class AbstractBase
  * @Description TODO
  * @Author Aquan
  * @Date 2020/8/18 16:46
@@ -28,7 +28,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(value = AuditingEntityListener.class)
-public abstract class AbstractAuditBase {
+public abstract class AbstractBase {
 
     @CreatedDate
     // @JsonIgnore
