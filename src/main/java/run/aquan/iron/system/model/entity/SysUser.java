@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
+import run.aquan.iron.system.model.entity.support.AbstractBase;
 
 import javax.persistence.*;
 import java.util.Date;

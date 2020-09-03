@@ -1,4 +1,4 @@
-package run.aquan.iron.system.model.entity;
+package run.aquan.iron.system.model.entity.support;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

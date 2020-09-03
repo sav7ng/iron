@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import run.aquan.iron.system.model.entity.support.AbstractBase;
 
 import javax.persistence.*;
 import java.io.Serializable;

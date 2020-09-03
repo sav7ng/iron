@@ -9,6 +9,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import run.aquan.iron.system.model.entity.support.AbstractBase;
 
 import javax.persistence.*;
 import java.util.ArrayList;
