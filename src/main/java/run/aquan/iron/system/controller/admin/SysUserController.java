@@ -61,4 +61,11 @@ public class SysUserController {
     public String changePassword(@Valid @RequestBody ChangePasswordParam changePasswordParam) {
         return sysUserService.changePassword(changePasswordParam, this.currentUser.getCurrentSysUser());
     }
+
+    @GetMapping("getUserInfo")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public JwtUser getUserInfo() {
+        return currentUser.getCurrentSysUser();
+    }
+
 }
