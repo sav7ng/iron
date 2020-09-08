@@ -27,7 +27,8 @@ public class WebsocketController {
     }
 
     @GetMapping("send")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    // @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_USER') || hasAnyRole('ROLE_ADMIN')")
     // @SendTo("/topic/subscribe")// 如果服务器接受到了消息，就会对订阅了 @SendTo 括号中的地址的浏览器发送消息。
     public String send(@RequestParam(value = "message") String message) {
         // 广播
