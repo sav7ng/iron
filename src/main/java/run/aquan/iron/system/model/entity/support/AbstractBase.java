@@ -1,5 +1,6 @@
 package run.aquan.iron.system.model.entity.support;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,11 +33,13 @@ public abstract class AbstractBase {
 
     @CreatedDate
     // @JsonIgnore
+    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false, name = "created_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
     private Instant createdTime;
 
     @LastModifiedDate
     // @JsonIgnore
+    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
     private Instant updatedTime;
 
