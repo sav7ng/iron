@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import run.aquan.iron.system.model.entity.support.AbstractBase;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import java.util.List;
 @DynamicUpdate
 @Entity(name = "Role")
 @Table(name = "role")
-public class Role extends AbstractAuditBase {
+public class Role extends AbstractBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

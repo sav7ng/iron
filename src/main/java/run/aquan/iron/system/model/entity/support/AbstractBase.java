@@ -1,5 +1,6 @@
-package run.aquan.iron.system.model.entity;
+package run.aquan.iron.system.model.entity.support;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +18,7 @@ import javax.persistence.MappedSuperclass;
 import java.time.Instant;
 
 /**
- * @Class AbstractAuditBase
+ * @Class AbstractBase
  * @Description TODO
  * @Author Aquan
  * @Date 2020/8/18 16:46
@@ -28,15 +29,17 @@ import java.time.Instant;
 @NoArgsConstructor
 @MappedSuperclass
 @EntityListeners(value = AuditingEntityListener.class)
-public abstract class AbstractAuditBase {
+public abstract class AbstractBase {
 
     @CreatedDate
     // @JsonIgnore
+    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(updatable = false, name = "created_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP comment '创建时间'")
     private Instant createdTime;
 
     @LastModifiedDate
     // @JsonIgnore
+    // @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_time", columnDefinition = "timestamp default CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP comment '更新时间'")
     private Instant updatedTime;
 

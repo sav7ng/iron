@@ -4,4 +4,4 @@ ${AnsiColor.BRIGHT_YELLOW}
 \ \ \  \ \  __<   \ \ \/\ \  \ \ \-.  \
  \ \_\  \ \_\ \_\  \ \_____\  \ \_\\"\_\
   \/_/   \/_/ /_/   \/_____/   \/_/ \/_/
-::: Spring-Boot ${spring-boot.version}     ::: Iron (version:${application.formatted-version})
+::: Spring-Boot ${spring-boot.version}     ::: Iron (version:${application.version})
