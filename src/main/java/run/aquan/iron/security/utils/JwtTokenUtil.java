@@ -65,10 +65,12 @@ public class JwtTokenUtil {
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
-        Long currentTimeMillis = System.currentTimeMillis() + SecurityConstant.EXPIRATION * 1000;
+        Long currentTimeMillis = System.currentTimeMillis();
+        Long tokenExpirationTime = currentTimeMillis + SecurityConstant.EXPIRATION * 1000;
+        Long refreshTokenExpirationTime = currentTimeMillis + SecurityConstant.EXPIRATION_REFRESHTOKEN * 1000;
         Date issuedTime = new Date();
-        String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, currentTimeMillis, issuedTime);
-        String refreshToken = JwtTokenUtil.createRefreshToken(jwtUser.getUsername(), currentTimeMillis, issuedTime);
+        String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, tokenExpirationTime, issuedTime);
+        String refreshToken = JwtTokenUtil.createRefreshToken(jwtUser.getUsername(), refreshTokenExpirationTime, issuedTime);
         JedisUtil.setObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + jwtUser.getUsername(), refreshToken, SecurityConstant.EXPIRATION_REFRESHTOKEN);
         return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).refreshToken(refreshToken).build();
     }
