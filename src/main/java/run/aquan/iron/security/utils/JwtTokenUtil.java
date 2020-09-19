@@ -72,7 +72,7 @@ public class JwtTokenUtil {
         String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, tokenExpirationTime, issuedTime);
         String refreshToken = JwtTokenUtil.createRefreshToken(jwtUser.getUsername(), refreshTokenExpirationTime, issuedTime);
         JedisUtil.setObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + jwtUser.getUsername(), refreshToken, SecurityConstant.EXPIRATION_REFRESHTOKEN);
-        return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(currentTimeMillis)).refreshToken(refreshToken).build();
+        return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(tokenExpirationTime)).refreshToken(refreshToken).build();
     }
 
     public static String createRefreshToken(String username, Long currentTimeMillis, Date issuedTime) {
