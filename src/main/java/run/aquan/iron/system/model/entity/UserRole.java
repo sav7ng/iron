@@ -1,9 +1,6 @@
 package run.aquan.iron.system.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import run.aquan.iron.system.model.entity.support.AbstractBase;
@@ -24,6 +21,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EqualsAndHashCode(callSuper=false)
 @Entity(name = "UserRole")
 @Table(name = "user_role")
 public class UserRole extends AbstractBase implements Serializable {

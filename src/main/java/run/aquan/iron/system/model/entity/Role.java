@@ -1,10 +1,7 @@
 package run.aquan.iron.system.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import run.aquan.iron.system.model.entity.support.AbstractBase;
@@ -26,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EqualsAndHashCode(callSuper=false)
 @Entity(name = "Role")
 @Table(name = "role")
 public class Role extends AbstractBase {
@@ -43,7 +41,7 @@ public class Role extends AbstractBase {
 
     @JsonIgnore
     @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<UserRole> userRoles = new ArrayList<>();
+    private final List<UserRole> userRoles = new ArrayList<>();
 
     public Role(String name, String description) {
         this.name = name;

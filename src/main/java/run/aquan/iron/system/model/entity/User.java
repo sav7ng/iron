@@ -1,10 +1,7 @@
 package run.aquan.iron.system.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
+@EqualsAndHashCode(callSuper=false)
 @Entity(name = "User")
 @Table(name = "user")
 public class User extends AbstractBase {
@@ -61,7 +59,7 @@ public class User extends AbstractBase {
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<UserRole> userRoles = new ArrayList<>();
+    private final List<UserRole> userRoles = new ArrayList<>();
 
     public List<SimpleGrantedAuthority> getRoles() {
         /**
