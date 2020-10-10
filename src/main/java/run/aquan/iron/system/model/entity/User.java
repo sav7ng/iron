@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@EqualsAndHashCode(callSuper=false)
-@Entity(name = "User")
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "user")
 public class User extends AbstractBase {
 

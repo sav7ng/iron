@@ -22,8 +22,8 @@ import java.util.Date;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@EqualsAndHashCode(callSuper=false)
-@Entity(name = "SysUser")
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "sys_user")
 public class SysUser extends AbstractBase {
 

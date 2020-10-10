@@ -2,9 +2,7 @@ package run.aquan.iron.system.model.entity.support;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -25,8 +23,8 @@ import java.time.Instant;
  * @Version 1.0
  **/
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
 @MappedSuperclass
 @EntityListeners(value = AuditingEntityListener.class)
 public abstract class AbstractBase {

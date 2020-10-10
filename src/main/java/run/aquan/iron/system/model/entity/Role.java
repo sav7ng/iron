@@ -23,8 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@EqualsAndHashCode(callSuper=false)
-@Entity(name = "Role")
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "role")
 public class Role extends AbstractBase {
 
