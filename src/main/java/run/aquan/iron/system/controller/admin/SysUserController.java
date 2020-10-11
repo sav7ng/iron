@@ -1,6 +1,7 @@
 package run.aquan.iron.system.controller.admin;
 
 import cn.hutool.core.date.DateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import run.aquan.iron.security.constants.SecurityConstant;
@@ -30,6 +31,7 @@ public class SysUserController {
 
     private final SysUserService sysUserService;
 
+    @Autowired
     public SysUserController(CurrentUser currentUser, SysUserService sysUserService) {
         this.currentUser = currentUser;
         this.sysUserService = sysUserService;
