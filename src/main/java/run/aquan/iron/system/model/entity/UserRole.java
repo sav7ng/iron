@@ -21,8 +21,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@EqualsAndHashCode(callSuper=false)
-@Entity(name = "UserRole")
+@Entity
+@EqualsAndHashCode(callSuper = true)
 @Table(name = "user_role")
 public class UserRole extends AbstractBase implements Serializable {
 
