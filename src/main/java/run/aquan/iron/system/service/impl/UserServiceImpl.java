@@ -36,7 +36,6 @@ import java.util.Optional;
 
 @Slf4j
 @Service
-@Transactional
 public class UserServiceImpl implements UserService {
 
     private final BCryptPasswordEncoder bCryptPasswordEncoder;

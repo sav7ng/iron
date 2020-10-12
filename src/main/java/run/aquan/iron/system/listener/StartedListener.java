@@ -1,6 +1,7 @@
 package run.aquan.iron.system.listener;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationStartedEvent;
 import org.springframework.context.ApplicationListener;
@@ -31,6 +32,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
 
     private final RoleService roleService;
 
+    @Autowired
     public StartedListener(SysUserService sysUserService, RoleService roleService) {
         this.sysUserService = sysUserService;
         this.roleService = roleService;
