@@ -38,8 +38,6 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
@@ -47,8 +45,7 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
 
     @Autowired
-    public UserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, UserRepository userRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.userRoleRepository = userRoleRepository;
@@ -59,6 +56,7 @@ public class UserServiceImpl implements UserService {
         String username = loginParam.getUsername();
         try {
             User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             if (bCryptPasswordEncoder.matches(loginParam.getPassword(), user.getPassword())) {
                 synchronized (this) {
                     AuthToken authToken = JwtTokenUtil.createToken(new JwtUser(user));
@@ -114,6 +112,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentUser) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (!bCryptPasswordEncoder.matches(changePasswordParam.getPassword(), currentUser.getPassword()))
             throw new IronException("原密码错误");
         try {
@@ -146,6 +145,7 @@ public class UserServiceImpl implements UserService {
         try {
             if (optionalUser.isPresent())
                 throw new UserNameAlreadyExistException("User name already exist!Please choose another user name.");
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             User user = User.builder()
                     .username(registerUserParam.getUsername())
                     .password(bCryptPasswordEncoder.encode(registerUserParam.getPassword()))

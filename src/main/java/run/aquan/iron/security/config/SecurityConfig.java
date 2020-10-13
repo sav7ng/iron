@@ -36,10 +36,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     /**
      * 密码编码器
      */
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    // @Bean
+    // public BCryptPasswordEncoder bCryptPasswordEncoder() {
+    //     return new BCryptPasswordEncoder();
+    // }
 
     @Bean
     public UserDetailsService createUserDetailsService() {
@@ -48,8 +48,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         // 设置自定义的userDetailsService以及密码编码器
-        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Override

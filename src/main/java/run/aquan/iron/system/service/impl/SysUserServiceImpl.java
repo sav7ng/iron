@@ -32,13 +32,10 @@ import java.util.Optional;
 @Service
 public class SysUserServiceImpl implements SysUserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
     private final SysUserRepository sysUserRepository;
 
     @Autowired
-    public SysUserServiceImpl(BCryptPasswordEncoder bCryptPasswordEncoder, SysUserRepository sysUserRepository) {
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    public SysUserServiceImpl(SysUserRepository sysUserRepository) {
         this.sysUserRepository = sysUserRepository;
     }
 
@@ -49,6 +46,7 @@ public class SysUserServiceImpl implements SysUserService {
         if (admin.isPresent()) {
             return "No need to repeat initialization";
         }
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         SysUser sysUser = SysUser.builder().username("admin").password(bCryptPasswordEncoder.encode("aquan")).roles("ADMIN").build();
         try {
             sysUserRepository.save(sysUser);
@@ -75,6 +73,7 @@ public class SysUserServiceImpl implements SysUserService {
         String username = loginParam.getUsername();
         try {
             SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
             if (!bCryptPasswordEncoder.matches(loginParam.getPassword(), sysUser.getPassword()))
                 throw new IronException("Admin Password erro");
             synchronized (this) {
@@ -106,6 +105,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     @Override
     public String changePassword(ChangePasswordParam changePasswordParam, JwtUser currentSysUser) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         if (!bCryptPasswordEncoder.matches(changePasswordParam.getPassword(), currentSysUser.getPassword())) {
             throw new IronException("原密码错误");
         }
