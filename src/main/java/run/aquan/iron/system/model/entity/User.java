@@ -6,7 +6,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import run.aquan.iron.system.model.entity.support.AbstractBase;
+import run.aquan.iron.system.model.entity.support.AbstractEntityBase;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "user")
-public class User extends AbstractBase {
+public class User extends AbstractEntityBase {
 
     @Id
     @GeneratedValue(generator = "uuid")

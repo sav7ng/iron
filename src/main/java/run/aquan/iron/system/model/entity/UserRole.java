@@ -3,7 +3,7 @@ package run.aquan.iron.system.model.entity;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import run.aquan.iron.system.model.entity.support.AbstractBase;
+import run.aquan.iron.system.model.entity.support.AbstractEntityBase;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -24,7 +24,7 @@ import java.io.Serializable;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "user_role")
-public class UserRole extends AbstractBase implements Serializable {
+public class UserRole extends AbstractEntityBase implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
