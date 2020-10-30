@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import run.aquan.iron.system.job.TestJob;
 import run.aquan.iron.system.service.RoleService;
 import run.aquan.iron.system.service.SysUserService;
 
@@ -43,10 +44,11 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
         this.initAdmin();
         this.initRole();
         this.printStartInfo();
+        // this.initTestJob();定时任务test
     }
 
     private void printStartInfo() {
-            log.debug("Iron doc was enable at {}/swagger-ui.html", baseUrl);
+        log.debug("Iron doc was enable at {}/swagger-ui.html", baseUrl);
     }
 
     private void initAdmin() {
@@ -57,6 +59,10 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     private void initRole() {
         String init = roleService.init();
         log.info("User Role Whether initialization was successful:" + init);
+    }
+
+    private void initTestJob() {
+        TestJob.createJob(1);
     }
 
 }
