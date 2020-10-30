@@ -4,7 +4,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.GenericGenerator;
-import run.aquan.iron.system.model.entity.support.AbstractBase;
+import run.aquan.iron.system.model.entity.support.AbstractEntityBase;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,7 +25,7 @@ import java.util.Date;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "sys_user")
-public class SysUser extends AbstractBase {
+public class SysUser extends AbstractEntityBase {
 
     @Id
     @GeneratedValue(generator = "uuid")

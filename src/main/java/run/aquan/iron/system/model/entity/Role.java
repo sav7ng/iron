@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
-import run.aquan.iron.system.model.entity.support.AbstractBase;
+import run.aquan.iron.system.model.entity.support.AbstractEntityBase;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode(callSuper = true)
 @Table(name = "role")
-public class Role extends AbstractBase {
+public class Role extends AbstractEntityBase {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
