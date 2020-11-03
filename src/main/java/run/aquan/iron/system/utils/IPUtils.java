@@ -3,14 +3,14 @@ package run.aquan.iron.system.utils;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @Class IPUtil
+ * @Class IPUtils
  * @Description TODO
  * @Author Aquan
  * @Date 2020/3/20 13:59
  * @Version 1.0
  **/
 
-public class IPUtil {
+public class IPUtils {
 
     /**
      * 获取真实ip地址，避免获取代理ip

@@ -14,7 +14,7 @@ import java.io.StringWriter;
  * @Version 1.0
  * @see "org.apache.commons.lang3.exception.ExceptionUtils"
  **/
-public class ExceptionUtil {
+public class ExceptionUtils {
 
     /**
      * <p>Gets the stack trace from a Throwable as a String.</p>

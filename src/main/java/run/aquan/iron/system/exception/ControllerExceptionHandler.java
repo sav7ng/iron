@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import run.aquan.iron.system.model.support.BaseResponse;
-import run.aquan.iron.system.utils.ExceptionUtil;
+import run.aquan.iron.system.utils.ExceptionUtils;
 
 /**
  * @Class ControllerExceptionHandler
@@ -88,7 +88,7 @@ public class ControllerExceptionHandler {
         baseResponse.setMessage(t.getMessage());
 
         if (log.isDebugEnabled()) {
-            baseResponse.setDevMessage(ExceptionUtil.getStackTrace(t));
+            baseResponse.setDevMessage(ExceptionUtils.getStackTrace(t));
         }
 
         return baseResponse;

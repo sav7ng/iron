@@ -16,8 +16,8 @@ import run.aquan.iron.system.model.entity.SysUser;
 import run.aquan.iron.system.model.entity.User;
 import run.aquan.iron.system.service.SysUserService;
 import run.aquan.iron.system.service.UserService;
-import run.aquan.iron.system.utils.IronDateUtil;
-import run.aquan.iron.system.utils.JedisUtil;
+import run.aquan.iron.system.utils.IronDateUtils;
+import run.aquan.iron.system.utils.JedisUtils;
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
@@ -71,8 +71,8 @@ public class JwtTokenUtil {
         Date issuedTime = new Date();
         String token = JwtTokenUtil.createToken(jwtUser.getUsername(), roles, tokenExpirationTime, issuedTime);
         String refreshToken = JwtTokenUtil.createRefreshToken(jwtUser.getUsername(), refreshTokenExpirationTime, issuedTime);
-        JedisUtil.setObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + jwtUser.getUsername(), refreshToken, SecurityConstant.EXPIRATION_REFRESHTOKEN);
-        return AuthToken.builder().accessToken(token).expiration(IronDateUtil.asDate(tokenExpirationTime)).refreshToken(refreshToken).build();
+        JedisUtils.setObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + jwtUser.getUsername(), refreshToken, SecurityConstant.EXPIRATION_REFRESHTOKEN);
+        return AuthToken.builder().accessToken(token).expiration(IronDateUtils.asDate(tokenExpirationTime)).refreshToken(refreshToken).build();
     }
 
     public static String createRefreshToken(String username, Long currentTimeMillis, Date issuedTime) {
@@ -143,10 +143,10 @@ public class JwtTokenUtil {
         Claims tokenBody = getTokenBody(token);
         if (admin) {
             SysUser sysUser = jwtTokenUtil.sysUserService.findUserByUserName(tokenBody.getSubject());
-            return IronDateUtil.checkDate(sysUser.getExpirationTime(), tokenBody.getExpiration());
+            return IronDateUtils.checkDate(sysUser.getExpirationTime(), tokenBody.getExpiration());
         } else {
             User user = jwtTokenUtil.userService.findUserByUserName(tokenBody.getSubject());
-            return IronDateUtil.checkDate(user.getExpirationTime(), tokenBody.getExpiration());
+            return IronDateUtils.checkDate(user.getExpirationTime(), tokenBody.getExpiration());
         }
     }
 

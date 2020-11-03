@@ -16,7 +16,7 @@ import run.aquan.iron.system.model.params.ChangePasswordParam;
 import run.aquan.iron.system.model.params.LoginParam;
 import run.aquan.iron.system.repository.SysUserRepository;
 import run.aquan.iron.system.service.SysUserService;
-import run.aquan.iron.system.utils.JedisUtil;
+import run.aquan.iron.system.utils.JedisUtils;
 
 import java.util.Date;
 import java.util.Optional;
@@ -95,7 +95,7 @@ public class SysUserServiceImpl implements SysUserService {
             SysUser sysUser = sysUserRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             sysUser.setExpirationTime(new Date());
             sysUserRepository.saveAndFlush(sysUser);
-            JedisUtil.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + sysUser.getUsername());
+            JedisUtils.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + sysUser.getUsername());
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());

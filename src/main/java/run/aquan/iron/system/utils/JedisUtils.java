@@ -12,20 +12,20 @@ import run.aquan.iron.system.utils.common.StringUtil;
 import java.util.Set;
 
 /**
- * @Class JedisUtil
+ * @Class JedisUtils
  * @Description TODO
  * @Author Aquan
  * @Date 2020.7.19 22:23
  * @Version 1.0
  **/
 @Component
-public class JedisUtil {
+public class JedisUtils {
 
     private static JedisPool jedisPool;
 
     @Autowired
     public void setJedisPool(JedisPool jedisPool) {
-        JedisUtil.jedisPool = jedisPool;
+        JedisUtils.jedisPool = jedisPool;
     }
 
     /**

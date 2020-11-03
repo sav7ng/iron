@@ -4,13 +4,13 @@ import java.time.*;
 import java.util.Date;
 
 /**
- * @Class IronDateUtil
+ * @Class IronDateUtils
  * @Description TODO 时间处理工具
  * @Author Aquan
  * @Date 2019/12/26 13:24
  * @Version 1.0
  **/
-public class IronDateUtil {
+public class IronDateUtils {
 
     public static Date asDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());

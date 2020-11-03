@@ -29,7 +29,7 @@ import run.aquan.iron.system.repository.RoleRepository;
 import run.aquan.iron.system.repository.UserRepository;
 import run.aquan.iron.system.repository.UserRoleRepository;
 import run.aquan.iron.system.service.UserService;
-import run.aquan.iron.system.utils.JedisUtil;
+import run.aquan.iron.system.utils.JedisUtils;
 
 import java.util.Date;
 import java.util.Optional;
@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
         Claims refreshTokenBody = JwtTokenUtil.getRefreshTokenBody(refreshToken);
         Long issuedTime = refreshTokenBody.getIssuedAt().getTime();
         String username = refreshTokenBody.getSubject();
-        String json = (String) Optional.ofNullable(JedisUtil.getObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + username)).orElseThrow(() -> new IronException("refreshToken 无效"));
+        String json = (String) Optional.ofNullable(JedisUtils.getObject(IronConstant.REDIS_REFRESHTOKEN_PREFIX + username)).orElseThrow(() -> new IronException("refreshToken 无效"));
         if (StringUtils.isBlank(json) || !json.equals(refreshToken)) {
             throw new IronException("refreshToken 无效");
         }
@@ -102,7 +102,7 @@ public class UserServiceImpl implements UserService {
             User user = userRepository.findByUsernameAndDatalevel(username, Datalevel.EFFECTIVE).orElseThrow(() -> new UsernameNotFoundException("No user found with username " + username));
             user.setExpirationTime(new Date());
             userRepository.saveAndFlush(user);
-            JedisUtil.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + user.getUsername());
+            JedisUtils.delKey(IronConstant.REDIS_REFRESHTOKEN_PREFIX + user.getUsername());
             return "成功退出";
         } catch (UsernameNotFoundException e) {
             log.error(e.getMessage());
