@@ -29,8 +29,8 @@ import java.util.stream.Collectors;
 
 /**
  * @Class JwtTokenUtils
- * @Description TODO 生成足够的安全随机密钥，以适合符合规范的签名
- * @Author Aquan
+ * @Description 生成足够的安全随机密钥，以适合符合规范的签名
+ * @Author Saving
  * @Date 2019/12/19 16:30
  * @Version 1.0
  **/

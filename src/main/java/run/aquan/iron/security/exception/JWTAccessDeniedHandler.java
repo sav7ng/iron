@@ -13,8 +13,8 @@ import java.io.IOException;
 
 /**
  * @Class JWTAccessDeniedHandler
- * @Description TODO AccessDeineHandler 用来解决认证过的用户访问无权限资源时的异常
- * @Author Aquan
+ * @Description AccessDeineHandler 用来解决认证过的用户访问无权限资源时的异常
+ * @Author Saving
  * @Date 2019/12/19 17:03
  * @Version 1.0
  **/

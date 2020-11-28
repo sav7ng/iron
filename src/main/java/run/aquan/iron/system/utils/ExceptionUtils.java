@@ -8,8 +8,8 @@ import java.io.StringWriter;
  * <p>Part from apache commons lang3 project.</p>
  *
  * @Class ExceptionUtils
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/7/10 17:44
  * @Version 1.0
  * @see "org.apache.commons.lang3.exception.ExceptionUtils"

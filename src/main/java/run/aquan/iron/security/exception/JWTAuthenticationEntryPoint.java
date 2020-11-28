@@ -13,8 +13,8 @@ import java.io.IOException;
 
 /**
  * @Class JWTAuthenticationEntryPoint
- * @Description TODO AuthenticationEntryPoint 用来解决匿名用户访问需要权限才能访问的资源时的异常
- * @Author Aquan
+ * @Description AuthenticationEntryPoint 用来解决匿名用户访问需要权限才能访问的资源时的异常
+ * @Author Saving
  * @Date 2019/12/19 17:04
  * @Version 1.0
  **/

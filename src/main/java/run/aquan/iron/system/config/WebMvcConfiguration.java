@@ -20,8 +20,8 @@ import java.util.List;
 
 /**
  * @Class WebMvcConfigurer
- * @Description TODO Spring MVC 配置
- * @Author Aquan
+ * @Description Spring MVC 配置
+ * @Author Saving
  * @Date 2019/8/16 14:53
  * @Version 1.0
  **/

@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @Class ChangePasswordParam
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/3/25 11:38
  * @Version 1.0
  **/

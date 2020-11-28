@@ -4,8 +4,8 @@ import lombok.Data;
 
 /**
  * @Class LoginUser
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2019/12/19 16:38
  * @Version 1.0
  **/

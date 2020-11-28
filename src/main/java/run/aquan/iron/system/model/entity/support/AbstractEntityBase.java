@@ -17,8 +17,8 @@ import java.time.Instant;
 
 /**
  * @Class AbstractEntityBase
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/8/18 16:46
  * @Version 1.0
  **/

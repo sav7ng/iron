@@ -2,8 +2,8 @@ package run.aquan.iron.system.enums;
 
 /**
  * @Class ResultCode
- * @Description TODO 响应码枚举，参考HTTP状态码的语义
- * @Author Aquan
+ * @Description 响应码枚举，参考HTTP状态码的语义
+ * @Author Saving
  * @Date 2019/8/16 14:54
  * @Version 1.0
  **/

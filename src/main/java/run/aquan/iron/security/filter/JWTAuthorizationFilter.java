@@ -23,8 +23,8 @@ import java.util.List;
 
 /**
  * @Class JWTAuthorizationFilter
- * @Description TODO 过滤器处理所有HTTP请求，并检查是否存在带有正确令牌的Authorization标头。例如，如果令牌未过期或签名密钥正确。
- * @Author Aquan
+ * @Description 过滤器处理所有HTTP请求，并检查是否存在带有正确令牌的Authorization标头。例如，如果令牌未过期或签名密钥正确。
+ * @Author Saving
  * @Date 2019/12/19 16:54
  * @Version 1.0
  **/

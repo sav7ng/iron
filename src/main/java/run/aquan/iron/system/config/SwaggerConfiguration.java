@@ -27,14 +27,16 @@ import static springfox.documentation.schema.AlternateTypeRules.newRule;
 
 /**
  * @Class SwaggerConfigurer
- * @Description TODO SwaggerAPI接口文档
- * @Author Aquan
+ * @Description SwaggerAPI接口文档
+ * @Author Saving
  * @Date 2019/8/16 14:52
  * @Version 1.0
  **/
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {
+
+    // TODO: 2020.11.28 @Saving swagger2 --> 待升级 swagger3 
 
     @Bean
     public Docket createContentApi() {
@@ -68,7 +70,7 @@ public class SwaggerConfiguration {
                 .title("IRON_API")
                 .description("爱敲代码的猫")
                 .termsOfServiceUrl("https://aquan.run")
-                .contact(new Contact("Aquan","https://aquan.run","853029827@qq.com"))
+                .contact(new Contact("Saving","https://aquan.run","853029827@qq.com"))
                 .version("0.1")
                 .build();
     }

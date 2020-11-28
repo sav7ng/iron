@@ -11,8 +11,8 @@ import java.io.IOException;
 
 /**
  * @Class AdminAuthenticationFilter
- * @Description TODO Admin background management user authentication filter
- * @Author Aquan
+ * @Description Admin background management user authentication filter
+ * @Author Saving
  * @Date 2019/12/23 15:28
  * @Version 1.0
  **/

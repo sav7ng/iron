@@ -6,8 +6,8 @@ import javax.validation.constraints.NotBlank;
 
 /**
  * @Class RefreshTokenParam
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/7/20 17:38
  * @Version 1.0
  **/

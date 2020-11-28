@@ -8,8 +8,8 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 /**
  * @Class WebSocketStompConfiguration
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/3/24 12:07
  * @Version 1.0
  **/

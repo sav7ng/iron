@@ -8,8 +8,8 @@ import run.aquan.iron.security.filter.AdminAuthenticationFilter;
 
 /**
  * @Class IronConfiguration
- * @Description TODO IRON项目配置文件
- * @Author Aquan
+ * @Description IRON项目配置文件
+ * @Author Saving
  * @Date 2019/12/23 15:35
  * @Version 1.0
  **/

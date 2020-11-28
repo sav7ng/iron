@@ -12,8 +12,8 @@ import javax.annotation.Resource;
 
 /**
  * @Class SysUserDetailsServiceImpl
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2019/12/24 10:43
  * @Version 1.0
  **/

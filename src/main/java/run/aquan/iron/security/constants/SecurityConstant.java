@@ -2,8 +2,8 @@ package run.aquan.iron.security.constants;
 
 /**
  * @Class SecurityConstant
- * @Description TODO Seruity常量
- * @Author Aquan
+ * @Description Seruity常量
+ * @Author Saving
  * @Date 2019/12/19 16:31
  * @Version 1.0
  **/

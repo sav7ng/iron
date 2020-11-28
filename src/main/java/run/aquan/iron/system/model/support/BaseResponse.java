@@ -7,8 +7,8 @@ import org.springframework.lang.Nullable;
 
 /**
  * @Class BaseResponse
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/7/10 15:05
  * @Version 1.0
  **/

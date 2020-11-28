@@ -10,8 +10,8 @@ import javax.annotation.Resource;
 
 /**
  * @Class CurrentUser
- * @Description TODO 获取当前请求的用户
- * @Author Aquan
+ * @Description 获取当前请求的用户
+ * @Author Saving
  * @Date 2019/12/19 16:39
  * @Version 1.0
  **/

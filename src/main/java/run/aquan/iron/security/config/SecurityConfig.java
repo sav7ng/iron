@@ -21,14 +21,16 @@ import javax.annotation.Resource;
 
 /**
  * @Class SecurityConfig
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2019/12/19 17:07
  * @Version 1.0
  **/
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    // TODO: 2020.11.28 @Saving SecurityConfig代码带重构优化 CORS
 
     @Resource
     private UserDetailsServiceImpl userDetailsServiceImpl;

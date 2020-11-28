@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 
 /**
  * @Class JWTAuthenticationFilter
- * @Description TODO 如果用户名和密码正确，那么过滤器将创建一个JWT Token 并在HTTP Response 的header中返回它，格式：token: "Bearer +具体token值"
- * @Author Aquan
+ * @Description 如果用户名和密码正确，那么过滤器将创建一个JWT Token 并在HTTP Response 的header中返回它，格式：token: "Bearer +具体token值"
+ * @Author Saving
  * @Date 2019/12/19 16:32
  * @Version 1.0
  **/

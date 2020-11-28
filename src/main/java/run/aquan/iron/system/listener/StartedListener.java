@@ -15,8 +15,8 @@ import run.aquan.iron.system.service.SysUserService;
 
 /**
  * @Class StartedListener
- * @Description TODO Method to execute after application launch
- * @Author Aquan
+ * @Description Method to execute after application launch
+ * @Author Saving
  * @Date 2019/12/20 18:18
  * @Version 1.0
  **/

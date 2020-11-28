@@ -10,8 +10,8 @@ import java.io.Serializable;
 
 /**
  * @Class UserRole
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020/8/18 16:40
  * @Version 1.0
  **/

@@ -21,8 +21,8 @@ import java.util.Objects;
 
 /**
  * @Class CommonResultControllerAdvice
- * @Description TODO Controller advice for comment result.
- * @Author Aquan
+ * @Description Controller advice for comment result.
+ * @Author Saving
  * @Date 2020/7/9 17:44
  * @Version 1.0
  **/

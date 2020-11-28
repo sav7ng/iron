@@ -11,8 +11,8 @@ import java.util.Date;
 
 /**
  * @Class SysUser
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2019.12.23 23:29
  * @Version 1.0
  **/

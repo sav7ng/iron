@@ -11,8 +11,8 @@ import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * @Class JedisConfiguration
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2020.7.19 22:15
  * @Version 1.0
  **/

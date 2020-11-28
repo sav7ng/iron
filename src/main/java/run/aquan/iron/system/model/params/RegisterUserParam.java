@@ -7,8 +7,8 @@ import javax.validation.constraints.Size;
 
 /**
  * @Class RegisterUserParam
- * @Description TODO
- * @Author Aquan
+ * @Description
+ * @Author Saving
  * @Date 2019.12.20 0:43
  * @Version 1.0
  **/

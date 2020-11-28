@@ -8,8 +8,8 @@ import java.util.Date;
 
 /**
  * @Class AuthToken
- * @Description TODO Token
- * @Author Aquan
+ * @Description Token
+ * @Author Saving
  * @Date 2019-12-26 11:42:38
  * @Version 1.1
  **/
