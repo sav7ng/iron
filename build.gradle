@@ -50,7 +50,7 @@ ext {
     swaggerVersion = "1.5.22"
     hutoolVersion = "5.5.1"
     mysqlConnectorJavaVersion = "8.0.22"
-    jwtVersion = "0.10.7"
+    jwtVersion = "0.11.2"
     jedisVersion = "3.3.0"
     gsonVersion = "2.8.5"
 }
