@@ -41,7 +41,7 @@ docker {
 
 
 ext {
-    commonsCodecVersion = "1.11"
+    commonsCodecVersion = "1.15"
     commonsLang3Version = "3.9"
     guavaVersion = "28.0-jre"
     fastjsonVersion = "1.2.70"
