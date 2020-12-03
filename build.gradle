@@ -46,7 +46,7 @@ ext {
     guavaVersion = "28.0-jre"
     fastjsonVersion = "1.2.70"
     druidSpringBootStarterVersion = "1.1.10"
-    springfoxSwaggerVersion = "2.9.2"
+    springfoxSwaggerVersion = "3.0.0"
     swaggerVersion = "1.5.22"
     hutoolVersion = "5.5.1"
     mysqlConnectorJavaVersion = "8.0.22"
