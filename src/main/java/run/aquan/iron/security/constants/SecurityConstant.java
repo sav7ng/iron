@@ -1,5 +1,8 @@
 package run.aquan.iron.security.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * @Class SecurityConstant
  * @Description Seruity常量
@@ -10,9 +13,34 @@ package run.aquan.iron.security.constants;
 public class SecurityConstant {
 
     /**
-     * 登录的地址
+     * 所有URL
      */
-    public static final String AUTH_LOGIN_URL = "/auth/user/login";
+    public static final String ALL_URL = "/api/**";
+
+    /**
+     * 用户登录 URL
+     */
+    public static final String CONTENT_USER_LOGIN_URL = "/api/content/user/login";
+
+    /**
+     * 用户注册 URL
+     */
+    public static final String CONTENT_USER_REGISTER_URL = "/api/content/user/register";
+
+    /**
+     * 用户注册 URL
+     */
+    public static final String CONTENT_USER_REFRESH_TOKEN_URL = "/api/content/user/refresh/token";
+
+    /**
+     * 管理后台用户登录 URL
+     */
+    public static final String ADMIN_USER_LOGIN_URL = "/api/admin/user/login";
+
+    /**
+     * Swagger2相关 URL
+     */
+    public static final List<String> SWAGGER_URL = Arrays.asList("/swagger-resources/**", "/v3/**", "/swagger-ui/**");
 
     /**
      * 角色的key
@@ -46,10 +74,11 @@ public class SecurityConstant {
 
     // JWT token defaults
     public static final String ADMIN_TOKEN_HEADER = "ADMIN-Authorization";
-    public static final String TOKEN_HEADER = "Authorization-Access-Token";
+    public static final String CONTEN_TOKEN_HEADER = "Authorization-Access-Token";
     public static final String TOKEN_PREFIX = "Bearer ";
     public static final String TOKEN_TYPE = "JWT";
 
-    private SecurityConstant() {    }
+    private SecurityConstant() {
+    }
 
 }

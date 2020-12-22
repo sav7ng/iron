@@ -24,7 +24,7 @@ import javax.validation.Valid;
  * @Version 1.0
  **/
 @RestController
-@RequestMapping("/api/admin/users")
+@RequestMapping("/api/admin/user")
 public class SysUserController {
 
     private final CurrentUser currentUser;

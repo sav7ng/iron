@@ -48,7 +48,7 @@ public class StartedListener implements ApplicationListener<ApplicationStartedEv
     }
 
     private void printStartInfo() {
-        log.debug("Iron doc was enable at {}/swagger-ui.html", baseUrl);
+        log.debug("Iron doc was enable at {}/swagger-ui", baseUrl);
     }
 
     private void initAdmin() {

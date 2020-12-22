@@ -20,6 +20,8 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 public class JedisConfiguration extends CachingConfigurerSupport {
 
+    // TODO: 2020.12.22 @Saving Jedis待优化注入方式
+
     /**
      * SpringSession  需要注意的就是redis需要2.8以上版本，然后开启事件通知，在redis配置文件里面加上
      * notify-keyspace-events Ex

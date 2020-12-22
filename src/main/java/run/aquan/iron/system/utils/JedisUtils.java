@@ -21,6 +21,8 @@ import java.util.Set;
 @Component
 public class JedisUtils {
 
+    // TODO: 2020.12.22 @Saving Jedis待优化注入方式 
+
     private static JedisPool jedisPool;
 
     @Autowired

@@ -40,7 +40,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
                                     HttpServletResponse response,
                                     FilterChain chain) throws IOException, ServletException {
 
-        String apiAuthorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
+        String apiAuthorization = request.getHeader(SecurityConstant.CONTEN_TOKEN_HEADER);
         String adminAuthorization = request.getHeader(SecurityConstant.ADMIN_TOKEN_HEADER);
         // 如果请求头中没有token信息则直接放行了
         if ((apiAuthorization == null || !apiAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX)) && (adminAuthorization == null || !adminAuthorization.startsWith(SecurityConstant.TOKEN_PREFIX))) {

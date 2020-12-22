@@ -45,7 +45,7 @@ public class UserController {
         return userService.login(loginParam);
     }
 
-    @PostMapping("refreshToken")
+    @PostMapping("refresh/token")
     @ApiOperation("Refreshes Token")
     public AuthToken refreshToken(@Valid @RequestBody RefreshTokenParam refreshTokenParam) {
         return userService.refreshToken(refreshTokenParam.getRefreshToken());
@@ -66,7 +66,7 @@ public class UserController {
     @GetMapping
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     public String getByToken(HttpServletRequest request) {
-        String authorization = request.getHeader(SecurityConstant.TOKEN_HEADER);
+        String authorization = request.getHeader(SecurityConstant.CONTEN_TOKEN_HEADER);
         String token = authorization.replace(SecurityConstant.TOKEN_PREFIX, "");
         String date = DateUtil.formatDateTime(JwtTokenUtil.getTokenExpiration(token));
         String result = "当前访问该接口的用户为：" + currentUser.getCurrentUser().toString() + "[" + date + "]";

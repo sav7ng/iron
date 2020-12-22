@@ -16,7 +16,7 @@ server:
     direct-buffers: true
 spring:
   profiles:
-   active: dev
+   active: local
   mvc:
     throw-exception-if-no-handler-found: true
   resources:
@@ -29,3 +29,23 @@ spring:
 
 iron:
   baseUrl: http://localhost:${server.port}${server.servlet.context-path}
+  swagger:
+    enable: true
+    front:
+      groupName: IRON-CONTENT
+      basePackage: run.aquan.iron.system.controller.content
+      title: IRON 前端管理
+      description: IRON API
+      contactName: Saving
+      contactUrl: http://aquan.run/
+      contactEmail: savingrun@gmail.com
+      version: 1.0.0
+    back:
+      groupName: IRON-ADMIN
+      basePackage: run.aquan.iron.system.controller.admin
+      title: IRON 后端管理
+      description: IRON API
+      contactName: Saving
+      contactUrl: http://aquan.run/
+      contactEmail: savingrun@gmail.com
+      version: 1.0.0

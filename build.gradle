@@ -46,8 +46,7 @@ ext {
     guavaVersion = "28.0-jre"
     fastjsonVersion = "1.2.70"
     druidSpringBootStarterVersion = "1.1.10"
-    springfoxSwaggerVersion = "2.9.2"
-    swaggerVersion = "1.5.22"
+    swaggerVersion = "3.0.0"
     hutoolVersion = "5.5.1"
     mysqlConnectorJavaVersion = "8.0.22"
     jwtVersion = "0.10.7"
@@ -71,10 +70,7 @@ dependencies {
     implementation "com.alibaba:fastjson:$fastjsonVersion"
     implementation "com.alibaba:druid-spring-boot-starter:$druidSpringBootStarterVersion"
 
-    implementation "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
-    implementation "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
-    implementation "io.swagger:swagger-annotations:$swaggerVersion"
-    implementation "io.swagger:swagger-models:$swaggerVersion"
+    implementation "io.springfox:springfox-boot-starter:$swaggerVersion"
 
     implementation "cn.hutool:hutool-all:$hutoolVersion"
     implementation "mysql:mysql-connector-java:$mysqlConnectorJavaVersion"

@@ -13,6 +13,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 import java.nio.charset.StandardCharsets;
@@ -45,25 +46,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         resolvers.add(sortResolver);
     }
 
-
-    //使用阿里 FastJson 作为JSON MessageConverter
-    // @Override
-    // public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-    //     FastJsonHttpMessageConverter converter = new FastJsonHttpMessageConverter();
-    //     FastJsonConfig config = new FastJsonConfig();
-    //     config.setSerializerFeatures(SerializerFeature.WriteMapNullValue);//保留空的字段
-    //     //SerializerFeature.WriteNullStringAsEmpty,//String null -> ""
-    //     //SerializerFeature.WriteNullNumberAsZero//Number null -> 0
-    //     // 按需配置，更多参考FastJson文档哈
-    //
-    //     converter.setFastJsonConfig(config);
-    //     // converter.setDefaultCharset(Charset.forName("UTF-8"));
-    //     // converter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8));
-    //     converter.setDefaultCharset(StandardCharsets.UTF_8);
-    //     converter.setSupportedMediaTypes(Collections.singletonList(new MediaType("application", "json", StandardCharsets.UTF_8)));
-    //     converters.add(converter);
-    // }
-
     @Override
     public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.stream()
@@ -85,28 +67,20 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 });
     }
 
-    //解决跨域问题
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedOrigins("*")
-                //暴露header中的其他属性给客户端应用程序
-                //如果不设置这个属性前端无法通过response header获取到Authorization也就是token
-                .exposedHeaders("Authorization")
-                .allowCredentials(true)
-                .allowedMethods("GET", "POST", "DELETE", "PUT")
-                .maxAge(3600);
-    }
-
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/");
-        registry.addResourceHandler("swagger-ui.html")
-                .addResourceLocations("classpath:/META-INF/resources/");
-        registry.addResourceHandler("/webjars/**")
-                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/swagger-ui/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/springfox-swagger-ui/")
+                .resourceChain(false);
     }
+
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        // registry.addViewController("/swagger-ui")
+        //         .setViewName("forward:/swagger-ui/index.html");
+        // TODO: 2020.11.27 addViewController实现不了
+        registry.addRedirectViewController("/swagger-ui", "/swagger-ui/index.html");
+    }
+
 
 }
