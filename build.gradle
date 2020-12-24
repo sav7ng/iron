@@ -51,7 +51,7 @@ ext {
     mysqlConnectorJavaVersion = "8.0.22"
     jwtVersion = "0.10.7"
     jedisVersion = "3.3.0"
-    gsonVersion = "2.8.5"
+    gsonVersion = "2.8.6"
 }
 
 dependencies {
