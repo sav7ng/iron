@@ -7,9 +7,9 @@ package run.aquan.iron.system.utils.common;
  * @Date 2020.7.19 22:29
  * @Version 1.0
  **/
-public class StringUtil {
+public class StringUtils {
 
-    private StringUtil() {}
+    private StringUtils() {}
 
     /**
      * 定义下划线

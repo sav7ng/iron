@@ -6,21 +6,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+import run.aquan.iron.system.exception.IronException;
 
 /**
  * @Class JedisConfiguration
  * @Description
  * @Author Saving
- * @Date 2020.7.19 22:15
- * @Version 1.0
+ * @date 2020.12.29 10:45
+ * @Version 1.1
  **/
 @Slf4j
 @Configuration
 public class JedisConfiguration extends CachingConfigurerSupport {
-
-    // TODO: 2020.12.22 @Saving Jedis待优化注入方式
 
     /**
      * SpringSession  需要注意的就是redis需要2.8以上版本，然后开启事件通知，在redis配置文件里面加上
@@ -32,6 +32,8 @@ public class JedisConfiguration extends CachingConfigurerSupport {
      * <util:constant static-field="org.springframework.session.data.redis.config.ConfigureRedisAction.NO_OP"/>
      * @return
      */
+    @Value("${spring.redis.database}")
+    private int database;
 
     @Value("${spring.redis.host}")
     private String host;
@@ -67,11 +69,14 @@ public class JedisConfiguration extends CachingConfigurerSupport {
         jedisPoolConfig.setMaxTotal(maxActive);
         jedisPoolConfig.setMinIdle(minIdle);
         String redisPassword = StringUtils.isNotBlank(password) ? password : null;
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, redisPassword);
-
-        log.debug("JedisPool注入成功");
-        log.debug("redis地址：{}:{}", host, port);
-        return  jedisPool;
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, redisPassword, database);
+        try (Jedis jedis = jedisPool.getResource()) {
+            log.debug("JedisPool注入成功");
+            log.debug("redis地址：{}:{}", host, port);
+            return  jedisPool;
+        } catch (Exception e) {
+            throw new IronException("JedisPool注入失败");
+        }
     }
 
 }

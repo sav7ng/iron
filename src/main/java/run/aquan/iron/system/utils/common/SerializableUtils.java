@@ -13,9 +13,9 @@ import java.io.*;
  * @Version 1.0
  **/
 @Slf4j
-public class SerializableUtil {
+public class SerializableUtils {
 
-    private SerializableUtil() {}
+    private SerializableUtils() {}
 
     /**
      * 序列化
