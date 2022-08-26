@@ -45,7 +45,7 @@ public class SysUser extends AbstractEntityBase {
     @Column(name = "roles", columnDefinition = "varchar(200) comment '权限'")
     private String roles;
 
-    @Column(name = "expiration_time", columnDefinition = "timestamp comment 'token过期时间'")
+    @Column(name = "expiration_time", columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP comment 'token过期时间'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
 

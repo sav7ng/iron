@@ -53,7 +53,7 @@ public class User extends AbstractEntityBase {
     @Column(name = "enabled", columnDefinition = "tinyint(1) default 1 comment '是否启用 0:禁用 1:启用'")
     private Boolean enabled;
 
-    @Column(name = "expiration_time", columnDefinition = "timestamp comment 'token过期时间'")
+    @Column(name = "expiration_time", columnDefinition = "timestamp DEFAULT CURRENT_TIMESTAMP comment 'token过期时间'")
     @Temporal(TemporalType.TIMESTAMP)
     private Date expirationTime;
 
